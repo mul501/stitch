@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>시놉시스 - 웹소설 세계관 구축</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
+        rel="stylesheet">
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body class="bg-gray-50 font-sans h-screen overflow-hidden">
+    <!-- 모바일 오버레이 -->
+    <div id="mobile-overlay" class="mobile-overlay" onclick="utils.toggleSidebar()"></div>
+
+    <!-- 모바일 메뉴 버튼 -->
+    <button class="mobile-menu-btn" onclick="utils.toggleSidebar()">
+        <span class="material-symbols-outlined">menu</span>
+    </button>
+
+    <!-- 사이드바 -->
+    <aside id="sidebar"
+        class="fixed left-0 top-0 h-screen w-64 bg-white border-r border-gray-200 flex flex-col glass-panel">
+        <div class="p-6 border-b border-gray-200">
+            <h2 id="project-name" class="text-xl font-bold text-gray-900">로딩 중...</h2>
+            <p id="project-genre" class="text-sm text-gray-500 mt-1">-</p>
+        </div>
+        <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+            <a href="index.html"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors">
+                <span class="material-symbols-outlined">dashboard</span>
+                <span>대시보드</span>
+            </a>
+            <a href="character_list.html"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors">
+                <span class="material-symbols-outlined">person</span>
+                <span>캐릭터</span>
+            </a>
+            <a href="character_graph.html"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors">
+                <span class="material-symbols-outlined">hub</span>
+                <span>관계도</span>
+            </a>
+            <a href="event_list.html"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors">
+                <span class="material-symbols-outlined">event</span>
+                <span>이벤트</span>
+            </a>
+            <a href="timeline.html"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors">
+                <span class="material-symbols-outlined">timeline</span>
+                <span>타임라인</span>
+            </a>
+            <a href="synopsis.html"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg bg-blue-50 text-blue-600 font-medium transition-colors">
+                <span class="material-symbols-outlined">auto_stories</span>
+                <span>시놉시스</span>
+            </a>
+            <a href="foreshadowing.html"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors">
+                <span class="material-symbols-outlined">help</span>
+                <span>복선/떡밥</span>
+            </a>
+        </nav>
+
+        <!-- 사용자 프로필 -->
+        <div class="p-4 border-t border-gray-200">
+            <div class="flex items-center gap-3">
+                <img id="user-avatar" src="https://ui-avatars.com/api/?name=User&background=4285F4&color=fff"
+                    class="w-10 h-10 rounded-full" alt="프로필">
+                <div class="flex-1 min-w-0">
+                    <p id="user-name" class="text-sm font-medium text-gray-900 truncate"></p>
+                    <p id="user-role" class="text-xs text-gray-500 truncate"></p>
+                </div>
+                <button class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+                    <span class="material-symbols-outlined text-lg">settings</span>
+                </button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- 메인 컨텐츠 -->
+    <main class="ml-64 h-full flex flex-col transition-all duration-300">
+        <!-- 헤더 -->
+        <header class="bg-white border-b border-gray-200 px-8 py-4 flex justify-between items-center glass-panel z-10">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-900">시놉시스</h1>
+                <p class="text-sm text-gray-600">작품의 줄거리와 구성을 기획하세요</p>
+            </div>
+            <div class="flex bg-gray-100 p-1 rounded-lg">
+                <button onclick="switchTab('list')" id="tab-list"
+                    class="px-4 py-2 rounded-md text-sm font-medium bg-white text-gray-900 shadow-sm transition-all">목록/편집</button>
+                <button onclick="switchTab('generate')" id="tab-generate"
+                    class="px-4 py-2 rounded-md text-sm font-medium text-gray-500 hover:text-gray-900 transition-all">AI
+                    생성</button>
+            </div>
+        </header>
+
+        <!-- 컨텐츠 영역 -->
+        <div class="flex-1 overflow-hidden relative">
+            <!-- 목록/편집 탭 -->
+            <div id="view-list" class="h-full flex animate-fade-in">
+                <!-- 시놉시스 목록 -->
+                <div class="w-80 border-r border-gray-200 bg-white flex flex-col">
+                    <div class="p-4 border-b border-gray-200 flex justify-between items-center">
+                        <h3 class="font-bold text-gray-900">목록</h3>
+                        <button onclick="createNewSynopsis()"
+                            class="text-blue-600 hover:text-blue-700 text-sm font-medium transition-colors">
+                            + 새 시놉시스
+                        </button>
+                    </div>
+                    <ul id="synopsis-list" class="flex-1 overflow-y-auto p-2 space-y-1">
+                        <!-- 목록 아이템이 동적으로 추가됨 -->
+                        <li class="text-center py-4 text-gray-500">로딩 중...</li>
+                    </ul>
+                </div>
+
+                <!-- 에디터 -->
+                <div class="flex-1 flex flex-col bg-gray-50">
+                    <div class="p-4 border-b border-gray-200 bg-white flex justify-between items-center">
+                        <h3 id="synopsis-title" class="font-bold text-lg text-gray-900">제목 없음</h3>
+                        <div class="flex items-center gap-3">
+                            <span id="save-status" class="text-xs text-gray-500">저장됨</span>
+                            <button id="btn-edit" onclick="toggleEditMode()"
+                                class="px-3 py-1.5 bg-gray-100 text-gray-700 text-sm rounded hover:bg-gray-200 transition-colors hidden">편집</button>
+                            <button id="btn-save" onclick="saveCurrentSynopsis()"
+                                class="px-3 py-1.5 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-colors hidden">저장</button>
+                        </div>
+                    </div>
+                    <div class="flex-1 p-6 overflow-y-auto">
+                        <!-- 읽기 모드 (기본) -->
+                        <div id="synopsis-viewer"
+                            class="w-full h-full p-6 bg-white rounded-lg border border-gray-200 shadow-sm overflow-y-auto leading-relaxed text-gray-800 prose prose-sm max-w-none">
+                            <p class="text-gray-400">시놉시스를 선택하세요...</p>
+                        </div>
+                        <!-- 편집 모드 (숨김) -->
+                        <textarea id="synopsis-editor"
+                            class="w-full h-full p-6 bg-white rounded-lg border border-gray-200 shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none leading-relaxed text-gray-800 hidden"
+                            placeholder="시놉시스 내용을 작성하세요..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI 생성 탭 -->
+            <div id="view-generate" class="h-full hidden overflow-y-auto p-8 animate-fade-in">
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
+                    <!-- 생성 모드 선택 -->
+                    <div class="mb-8">
+                        <h2 class="text-xl font-semibold text-gray-900 mb-4">생성 모드</h2>
+                        <div class="flex gap-4">
+                            <label class="cursor-pointer flex-1">
+                                <input type="radio" name="gen-mode" value="simple" class="sr-only peer" checked onchange="setGenerateMode('simple')">
+                                <div class="border-2 border-gray-200 rounded-lg p-4 hover:border-blue-300 peer-checked:border-blue-600 peer-checked:bg-blue-50 transition-colors text-center">
+                                    <span class="material-symbols-outlined text-2xl mb-2 block">short_text</span>
+                                    <h3 class="font-semibold text-gray-900">간단 생성</h3>
+                                    <p class="text-sm text-gray-600">짧은 시놉시스 (200-400자)</p>
+                                </div>
+                            </label>
+                            <label class="cursor-pointer flex-1">
+                                <input type="radio" name="gen-mode" value="extended" class="sr-only peer" onchange="setGenerateMode('extended')">
+                                <div class="border-2 border-gray-200 rounded-lg p-4 hover:border-blue-300 peer-checked:border-blue-600 peer-checked:bg-blue-50 transition-colors text-center">
+                                    <span class="material-symbols-outlined text-2xl mb-2 block">article</span>
+                                    <h3 class="font-semibold text-gray-900">확장 생성 (2000자+)</h3>
+                                    <p class="text-sm text-gray-600">부(Part) 단위 상세 시놉시스</p>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- 확장 생성 옵션 (확장 모드에서만 표시) -->
+                    <div id="extended-options" class="mb-8 hidden">
+                        <h2 class="text-xl font-semibold text-gray-900 mb-4">부(Part) 설정</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <!-- 부 유형 선택 -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">부 유형</label>
+                                <select id="part-type" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                    <option value="intro">도입부 (1부) - 주인공 소개, 세계관 설정</option>
+                                    <option value="development">전개부 (2부) - 동료 결집, 갈등 심화</option>
+                                    <option value="crisis">위기부 (3부) - 배신/반전, 클라이맥스</option>
+                                    <option value="resolution">결말부 (4부) - 최종 결전, 새로운 시작</option>
+                                </select>
+                            </div>
+                            <!-- 부 번호 -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">부 번호</label>
+                                <input type="number" id="part-number" value="1" min="1" max="20" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            </div>
+                            <!-- 부 제목 -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">부 제목</label>
+                                <input type="text" id="part-title" placeholder="예: 잃어버린 기억" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            </div>
+                        </div>
+                        <!-- 장르 선택 -->
+                        <div class="mt-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">장르</label>
+                            <div class="flex flex-wrap gap-2">
+                                <label class="cursor-pointer">
+                                    <input type="radio" name="genre" value="판타지" class="sr-only peer" checked>
+                                    <span class="px-4 py-2 rounded-full border border-gray-300 text-sm peer-checked:bg-blue-600 peer-checked:text-white peer-checked:border-blue-600">판타지</span>
+                                </label>
+                                <label class="cursor-pointer">
+                                    <input type="radio" name="genre" value="회귀물" class="sr-only peer">
+                                    <span class="px-4 py-2 rounded-full border border-gray-300 text-sm peer-checked:bg-blue-600 peer-checked:text-white peer-checked:border-blue-600">회귀물</span>
+                                </label>
+                                <label class="cursor-pointer">
+                                    <input type="radio" name="genre" value="빙의물" class="sr-only peer">
+                                    <span class="px-4 py-2 rounded-full border border-gray-300 text-sm peer-checked:bg-blue-600 peer-checked:text-white peer-checked:border-blue-600">빙의물</span>
+                                </label>
+                                <label class="cursor-pointer">
+                                    <input type="radio" name="genre" value="무협" class="sr-only peer">
+                                    <span class="px-4 py-2 rounded-full border border-gray-300 text-sm peer-checked:bg-blue-600 peer-checked:text-white peer-checked:border-blue-600">무협</span>
+                                </label>
+                                <label class="cursor-pointer">
+                                    <input type="radio" name="genre" value="로맨스판타지" class="sr-only peer">
+                                    <span class="px-4 py-2 rounded-full border border-gray-300 text-sm peer-checked:bg-blue-600 peer-checked:text-white peer-checked:border-blue-600">로맨스판타지</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 1: 템플릿 선택 (간단 모드에서만 표시) -->
+                    <div id="simple-template-section" class="mb-8">
+                        <h2 class="text-xl font-semibold text-gray-900 mb-4">1. 템플릿 선택</h2>
+                        <div id="template-selection" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <!-- 동적 생성 -->
+                        </div>
+                    </div>
+
+                    <!-- Step 2 & 3: 캐릭터 및 이벤트 선택 -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                        <!-- 캐릭터 선택 -->
+                        <div>
+                            <h2 class="text-xl font-semibold text-gray-900 mb-4">2. 캐릭터 선택</h2>
+                            <div id="character-selection" class="space-y-2 max-h-96 overflow-y-auto">
+                                <!-- 동적 생성 -->
+                            </div>
+                        </div>
+
+                        <!-- 이벤트 선택 -->
+                        <div>
+                            <h2 class="text-xl font-semibold text-gray-900 mb-4">3. 이벤트 선택</h2>
+                            <div id="event-selection" class="space-y-2 max-h-96 overflow-y-auto">
+                                <!-- 동적 생성 -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 생성 버튼 -->
+                    <div class="flex justify-center mb-8">
+                        <button id="generate-btn" onclick="handleGenerateSynopsis()"
+                            class="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-lg font-medium flex items-center gap-2">
+                            <span class="material-symbols-outlined">auto_fix_high</span>
+                            <span>시놉시스 생성하기</span>
+                        </button>
+                    </div>
+
+                    <!-- 생성 결과 영역 -->
+                    <div id="result-area" class="hidden">
+                        <div class="border-t border-gray-200 pt-8">
+                            <div class="flex items-center justify-between mb-4">
+                                <h2 class="text-xl font-semibold text-gray-900">생성된 시놉시스</h2>
+                                <div class="flex items-center gap-2">
+                                    <button onclick="copyGeneratedSynopsis()"
+                                        class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 flex items-center gap-2">
+                                        <span class="material-symbols-outlined">content_copy</span>
+                                        <span>복사</span>
+                                    </button>
+                                    <button onclick="addToList()"
+                                        class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 flex items-center gap-2">
+                                        <span class="material-symbols-outlined">playlist_add</span>
+                                        <span>목록에 추가</span>
+                                    </button>
+                                    <button onclick="handleGenerateSynopsis()"
+                                        class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 flex items-center gap-2">
+                                        <span class="material-symbols-outlined">refresh</span>
+                                        <span>다시 생성</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="bg-gray-50 rounded-lg p-6">
+                                <h3 id="generated-title" class="text-lg font-semibold text-gray-900 mb-4"></h3>
+                                <p id="generated-synopsis" class="text-gray-700 whitespace-pre-wrap leading-relaxed">
+                                </p>
+                                <div class="mt-4 flex items-center gap-4 text-sm text-gray-600">
+                                    <span>단어 수: <span id="word-count" class="font-medium">0</span></span>
+                                    <span>장르: <span id="genre" class="font-medium">-</span></span>
+                                    <span>톤: <span id="tone" class="font-medium">-</span></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 로딩 오버레이 -->
+                    <div id="loading-overlay"
+                        class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                        <div class="bg-white rounded-lg p-8 text-center">
+                            <div class="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-500 mx-auto mb-4">
+                            </div>
+                            <p class="text-gray-700 font-medium">AI가 시놉시스를 생성하고 있습니다...</p>
+                            <p class="text-gray-500 text-sm mt-2">잠시만 기다려주세요</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="./js/utils.js"></script>
+    <script src="./js/data-loader.js"></script>
+    <script src="./js/synopsis-generator.js"></script>
+    <script>
+        // ===== 전역 변수 =====
+        let allSynopses = [];
+        let currentSynopsis = null;
+        let autoSaveTimeout = null;
+        let currentTab = 'list';
+        let isEditMode = false;
+
+        // 생성기 관련 변수
+        let allTemplates = [];
+        let allCharacters = [];
+        let allEvents = [];
+        let selectedTemplate = null;
+        let selectedCharacters = [];
+        let selectedEvents = [];
+        let generatedResult = null;
+        let generateMode = 'simple'; // 'simple' | 'extended'
+
+        // ===== 탭 전환 =====
+        function switchTab(tab) {
+            currentTab = tab;
+
+            // 탭 버튼 스타일 업데이트
+            const listTab = document.getElementById('tab-list');
+            const generateTab = document.getElementById('tab-generate');
+            const listContent = document.getElementById('view-list');
+            const generateContent = document.getElementById('view-generate');
+
+            if (tab === 'list') {
+                listTab.className = 'px-6 py-4 text-sm font-medium border-b-2 border-blue-600 text-blue-600';
+                generateTab.className = 'px-6 py-4 text-sm font-medium border-b-2 border-transparent text-gray-500 hover:text-gray-700';
+                listContent.classList.remove('hidden');
+                generateContent.classList.add('hidden');
+            } else {
+                listTab.className = 'px-6 py-4 text-sm font-medium border-b-2 border-transparent text-gray-500 hover:text-gray-700';
+                generateTab.className = 'px-6 py-4 text-sm font-medium border-b-2 border-blue-600 text-blue-600';
+                listContent.classList.add('hidden');
+                generateContent.classList.remove('hidden');
+            }
+
+            // URL 업데이트 (히스토리에 추가하지 않음)
+            const url = new URL(window.location.href);
+            url.searchParams.set('tab', tab);
+            window.history.replaceState({}, '', url);
+        }
+
+        // ===== 목록/편집 탭 관련 함수 =====
+        async function initSynopsisList() {
+            try {
+                const project = await dataLoader.getActiveProject();
+
+                if (project) {
+                    document.getElementById('project-name').textContent = project.name;
+                    document.getElementById('project-genre').textContent = project.genre;
+
+                    // SynopsisStore를 통해 병합된 데이터 로드
+                    allSynopses = await synopsisStore.getMergedSynopses(project.id);
+                    renderSynopsisList(allSynopses);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('synopsis-list').innerHTML = '<li class="text-center py-4 text-red-500">로딩 실패</li>';
+            }
+        }
+
+        function renderSynopsisList(synopses) {
+            const list = document.getElementById('synopsis-list');
+
+            if (synopses.length === 0) {
+                list.innerHTML = '<li class="text-center py-4 text-gray-500">시놉시스가 없습니다</li>';
+                return;
+            }
+
+            // 메인 시놉시스와 에피소드 분리
+            const mainSynopsis = synopses.find(s => s.type === 'main');
+            const episodes = synopses.filter(s => s.type === 'episode').sort((a, b) => a.order - b.order);
+
+            let html = '';
+
+            // 메인 시놉시스
+            if (mainSynopsis) {
+                html += `
+                    <li>
+                        <button
+                            onclick="selectSynopsis('${mainSynopsis.id}')"
+                            class="w-full text-left px-3 py-2 rounded-lg hover:bg-gray-100 ${currentSynopsis?.id === mainSynopsis.id ? 'bg-blue-100 text-blue-700 font-medium' : 'text-gray-700'}"
+                        >
+                            ${mainSynopsis.title}
+                        </button>
+                    </li>
+                `;
+            }
+
+            // 에피소드 목록
+            if (episodes.length > 0) {
+                html += '<li class="mt-4 mb-2 px-3 text-xs font-semibold text-gray-500 uppercase">에피소드</li>';
+                episodes.forEach(episode => {
+                    html += `
+                        <li>
+                            <button
+                                onclick="selectSynopsis('${episode.id}')"
+                                class="w-full text-left px-3 py-2 rounded-lg hover:bg-gray-100 ${currentSynopsis?.id === episode.id ? 'bg-blue-100 text-blue-700 font-medium' : 'text-gray-700'} text-sm"
+                            >
+                                ${episode.title}
+                            </button>
+                        </li>
+                    `;
+                });
+            }
+
+            list.innerHTML = html;
+        }
+
+        function selectSynopsis(synopsisId) {
+            // 현재 편집 중인 내용이 있으면 저장
+            if (currentSynopsis && isEditMode) {
+                saveToLocalStorage();
+            }
+
+            currentSynopsis = allSynopses.find(s => s.id === synopsisId);
+            if (!currentSynopsis) return;
+
+            // UI 업데이트
+            document.getElementById('synopsis-title').textContent = currentSynopsis.title;
+
+            // 읽기 모드로 HTML 렌더링
+            const viewer = document.getElementById('synopsis-viewer');
+            const editor = document.getElementById('synopsis-editor');
+
+            viewer.innerHTML = currentSynopsis.content || '<p class="text-gray-400">내용이 없습니다.</p>';
+            editor.value = currentSynopsis.content || '';
+
+            // 편집 버튼 표시
+            document.getElementById('btn-edit').classList.remove('hidden');
+
+            // 읽기 모드로 전환
+            showReadMode();
+
+            // 목록 하이라이트 업데이트
+            renderSynopsisList(allSynopses);
+
+            // 저장 상태 초기화
+            updateSaveStatus('저장됨');
+        }
+
+        // ===== 읽기/편집 모드 전환 =====
+        function toggleEditMode() {
+            if (isEditMode) {
+                // 편집 취소 시 원래 내용으로 복원
+                const editor = document.getElementById('synopsis-editor');
+                editor.value = currentSynopsis.content || '';
+                showReadMode();
+            } else {
+                showEditMode();
+            }
+        }
+
+        function showReadMode() {
+            isEditMode = false;
+            document.getElementById('synopsis-viewer').classList.remove('hidden');
+            document.getElementById('synopsis-editor').classList.add('hidden');
+            document.getElementById('btn-edit').textContent = '편집';
+            document.getElementById('btn-save').classList.add('hidden');
+        }
+
+        function showEditMode() {
+            if (!currentSynopsis) {
+                utils.showToast('시놉시스를 먼저 선택하세요', 'error');
+                return;
+            }
+            isEditMode = true;
+            document.getElementById('synopsis-viewer').classList.add('hidden');
+            document.getElementById('synopsis-editor').classList.remove('hidden');
+            document.getElementById('btn-edit').textContent = '취소';
+            document.getElementById('btn-save').classList.remove('hidden');
+            document.getElementById('synopsis-editor').focus();
+        }
+
+        function saveToLocalStorage() {
+            if (!currentSynopsis) return;
+
+            const content = document.getElementById('synopsis-editor').value;
+
+            // SynopsisStore를 통해 업데이트
+            const updated = synopsisStore.update(currentSynopsis.id, { content: content });
+
+            // 메모리 상의 데이터도 업데이트
+            currentSynopsis.content = content;
+            const index = allSynopses.findIndex(s => s.id === currentSynopsis.id);
+            if (index !== -1) {
+                allSynopses[index] = updated;
+            }
+
+            // viewer 업데이트
+            document.getElementById('synopsis-viewer').innerHTML = content || '<p class="text-gray-400">내용이 없습니다.</p>';
+
+            // 읽기 모드로 전환
+            showReadMode();
+
+            updateSaveStatus('저장됨');
+            utils.showToast('저장되었습니다', 'success');
+        }
+
+        function saveCurrentSynopsis() {
+            saveToLocalStorage();
+        }
+
+        function autoSave() {
+            clearTimeout(autoSaveTimeout);
+            updateSaveStatus('저장 중...');
+
+            autoSaveTimeout = setTimeout(() => {
+                saveToLocalStorage();
+            }, 1000);
+        }
+
+        function updateSaveStatus(status) {
+            document.getElementById('save-status').textContent = status;
+        }
+
+        // ===== AI 생성 탭 관련 함수 =====
+        async function initGenerator() {
+            try {
+                const project = await dataLoader.getActiveProject();
+
+                if (project) {
+                    // 데이터 로드 (병합된 캐릭터 데이터 사용)
+                    allTemplates = await dataLoader.getSynopsisTemplates(project.id);
+                    allCharacters = await characterStore.getMergedCharacters(project.id);
+                    allEvents = await dataLoader.getEvents(project.id);
+
+                    // UI 렌더링
+                    renderTemplates();
+                    renderCharacters();
+                    renderEvents();
+                }
+            } catch (error) {
+                console.error('Error loading generator data:', error);
+                utils.showToast('데이터 로딩 실패', 'error');
+            }
+        }
+
+        function renderTemplates() {
+            const container = document.getElementById('template-selection');
+            container.innerHTML = allTemplates.map(template => `
+                <label class="cursor-pointer">
+                    <input type="radio" name="template" value="${template.id}" class="sr-only peer" onchange="selectTemplate('${template.id}')">
+                    <div class="border-2 border-gray-200 rounded-lg p-4 hover:border-blue-300 peer-checked:border-blue-600 peer-checked:bg-blue-50 transition-colors">
+                        <h3 class="font-semibold text-gray-900 mb-1">${template.name}</h3>
+                        <p class="text-sm text-gray-600">${template.genre}</p>
+                    </div>
+                </label>
+            `).join('');
+        }
+
+        function renderCharacters() {
+            const container = document.getElementById('character-selection');
+            container.innerHTML = allCharacters.map(char => `
+                <label class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer">
+                    <input type="checkbox" value="${char.id}" onchange="toggleCharacter('${char.id}')" class="w-4 h-4 text-blue-600 rounded focus:ring-blue-500">
+                    <div class="flex-1">
+                        <span class="font-medium text-gray-900">${char.name}</span>
+                        <span class="text-sm text-gray-600 ml-2">(${char.role})</span>
+                    </div>
+                </label>
+            `).join('');
+        }
+
+        function renderEvents() {
+            const container = document.getElementById('event-selection');
+            container.innerHTML = allEvents.map(event => `
+                <label class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer">
+                    <input type="checkbox" value="${event.id}" onchange="toggleEvent('${event.id}')" class="w-4 h-4 text-blue-600 rounded focus:ring-blue-500">
+                    <div class="flex-1">
+                        <span class="font-medium text-gray-900">${event.title}</span>
+                    </div>
+                </label>
+            `).join('');
+        }
+
+        // 새 시놗시스 생성
+        function createNewSynopsis() {
+            // 현재 편집 중인 내용 저장
+            if (currentSynopsis) {
+                saveToLocalStorage();
+            }
+
+            // 새 시놉시스 만들기
+            const newOrder = allSynopses.filter(s => s.type === 'episode').length + 1;
+            const newSynopsis = synopsisStore.create({
+                projectId: allSynopses[0]?.projectId || 'proj_001',
+                title: `${newOrder}부: 새로운 시놉시스`,
+                type: 'episode',
+                order: newOrder,
+                content: ''
+            });
+
+            // 목록에 추가
+            allSynopses.push(newSynopsis);
+
+            // 목록 재렌더링
+            renderSynopsisList(allSynopses);
+
+            // 새 시놗시스 선택
+            selectSynopsis(newSynopsis.id);
+
+            utils.showToast('새 시놉시스가 추가되었습니다', 'success');
+        }
+
+        function selectTemplate(templateId) {
+            selectedTemplate = templateId;
+        }
+
+        function toggleCharacter(characterId) {
+            const index = selectedCharacters.indexOf(characterId);
+            if (index === -1) {
+                selectedCharacters.push(characterId);
+            } else {
+                selectedCharacters.splice(index, 1);
+            }
+        }
+
+        function toggleEvent(eventId) {
+            const index = selectedEvents.indexOf(eventId);
+            if (index === -1) {
+                selectedEvents.push(eventId);
+            } else {
+                selectedEvents.splice(index, 1);
+            }
+        }
+
+        // ===== 생성 모드 전환 =====
+        function setGenerateMode(mode) {
+            generateMode = mode;
+            const extendedOptions = document.getElementById('extended-options');
+            const simpleTemplateSection = document.getElementById('simple-template-section');
+
+            if (mode === 'extended') {
+                extendedOptions.classList.remove('hidden');
+                simpleTemplateSection.classList.add('hidden');
+            } else {
+                extendedOptions.classList.add('hidden');
+                simpleTemplateSection.classList.remove('hidden');
+            }
+        }
+
+        async function handleGenerateSynopsis() {
+            // 캐릭터 유효성 검사 (공통)
+            if (selectedCharacters.length === 0) {
+                utils.showToast('최소 1명의 캐릭터를 선택해주세요', 'error');
+                return;
+            }
+
+            // 모드별 유효성 검사
+            if (generateMode === 'simple') {
+                if (!selectedTemplate) {
+                    utils.showToast('템플릿을 선택해주세요', 'error');
+                    return;
+                }
+            } else {
+                // 확장 모드 유효성 검사
+                const partTitle = document.getElementById('part-title').value.trim();
+                if (!partTitle) {
+                    utils.showToast('부 제목을 입력해주세요', 'error');
+                    return;
+                }
+            }
+
+            // 로딩 표시
+            document.getElementById('loading-overlay').classList.remove('hidden');
+
+            try {
+                if (generateMode === 'simple') {
+                    // 기존 간단 생성
+                    generatedResult = await synopsisGenerator.generate(selectedTemplate, selectedCharacters, selectedEvents);
+                } else {
+                    // 확장 생성 (2000자+)
+                    const partType = document.getElementById('part-type').value;
+                    const partNumber = parseInt(document.getElementById('part-number').value) || 1;
+                    const partTitle = document.getElementById('part-title').value.trim();
+                    const genre = document.querySelector('input[name="genre"]:checked')?.value || '판타지';
+
+                    generatedResult = await synopsisGenerator.generateExtended(
+                        partType,
+                        partNumber,
+                        partTitle,
+                        selectedCharacters,
+                        selectedEvents,
+                        genre
+                    );
+                }
+
+                // 결과 표시
+                document.getElementById('generated-title').textContent = generatedResult.title;
+                document.getElementById('generated-synopsis').innerHTML = generatedResult.synopsis;  // HTML 렌더링을 위해 innerHTML 사용
+                document.getElementById('word-count').textContent = generatedResult.metadata.wordCount;
+                document.getElementById('genre').textContent = generatedResult.metadata.genre;
+                document.getElementById('tone').textContent = generatedResult.metadata.tone;
+
+                document.getElementById('result-area').classList.remove('hidden');
+
+                // 결과 영역으로 스크롤
+                document.getElementById('result-area').scrollIntoView({ behavior: 'smooth' });
+            } catch (error) {
+                console.error('Error generating synopsis:', error);
+                utils.showToast('시놉시스 생성 실패', 'error');
+            } finally {
+                // 로딩 숨기기
+                document.getElementById('loading-overlay').classList.add('hidden');
+            }
+        }
+
+        function copyGeneratedSynopsis() {
+            const synopsis = generatedResult.synopsis;
+            navigator.clipboard.writeText(synopsis).then(() => {
+                utils.showToast('클립보드에 복사되었습니다', 'success');
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+                utils.showToast('복사 실패', 'error');
+            });
+        }
+
+        function addToList() {
+            if (!generatedResult) return;
+
+            // SynopsisStore를 통해 저장
+            const newSynopsis = synopsisStore.create({
+                projectId: allSynopses[0]?.projectId || 'proj_001',
+                title: generatedResult.title,
+                type: 'episode',
+                order: allSynopses.filter(s => s.type === 'episode').length + 1,
+                content: generatedResult.synopsis
+            });
+
+            // 메모리 상의 목록에도 추가
+            allSynopses.push(newSynopsis);
+
+            utils.showToast('시놉시스가 목록에 추가되었습니다', 'success');
+
+            // 목록/편집 탭으로 전환
+            switchTab('list');
+
+            // 목록 다시 렌더링
+            renderSynopsisList(allSynopses);
+
+            // 새로 추가된 시놉시스 선택
+            selectSynopsis(newSynopsis.id);
+        }
+
+        // ===== 페이지 초기화 =====
+        document.addEventListener('DOMContentLoaded', async () => {
+            utils.initUserProfile();
+
+            // 프로젝트 정보 로드
+            const project = await dataLoader.getActiveProject();
+            if (project) {
+                document.getElementById('project-name').textContent = project.name;
+                document.getElementById('project-genre').textContent = project.genre;
+            }
+
+            // URL에서 탭 파라미터 읽기
+            const urlParams = new URLSearchParams(window.location.search);
+            const tab = urlParams.get('tab') || 'list';
+
+            // 두 탭 모두 초기화
+            await initSynopsisList();
+            await initGenerator();
+
+            // 탭 전환
+            switchTab(tab);
+
+            // 에디터 변경 감지 (목록/편집 탭)
+            const editor = document.getElementById('synopsis-editor');
+            editor.addEventListener('input', () => {
+                updateSaveStatus('변경됨');
+                autoSave();
+            });
+        });
+
+        // 전역 함수로 노출
+        window.switchTab = switchTab;
+        window.selectSynopsis = selectSynopsis;
+        window.saveCurrentSynopsis = saveCurrentSynopsis;
+        window.toggleEditMode = toggleEditMode;
+        window.showReadMode = showReadMode;
+        window.showEditMode = showEditMode;
+        window.selectTemplate = selectTemplate;
+        window.toggleCharacter = toggleCharacter;
+        window.toggleEvent = toggleEvent;
+        window.handleGenerateSynopsis = handleGenerateSynopsis;
+        window.copyGeneratedSynopsis = copyGeneratedSynopsis;
+        window.addToList = addToList;
+        window.createNewSynopsis = createNewSynopsis;
+        window.setGenerateMode = setGenerateMode;
+    </script>
+</body>
+
+</html>

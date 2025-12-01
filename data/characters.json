@@ -1,0 +1,104 @@
+{
+  "characters": [
+    {
+      "id": "char_001",
+      "projectId": "proj_001",
+      "name": "이로운",
+      "alias": "잃어버린 왕자",
+      "description": "잃어버린 왕국의 마지막 후계자. 어린 시절 왕국이 멸망하면서 평민으로 살아왔으나, 운명적으로 왕국을 되찾기 위한 여정을 시작한다.",
+      "age": 25,
+      "gender": "남",
+      "role": "주인공",
+      "affiliation": "루미나스 왕국 (멸망)",
+      "keywords": ["#왕족", "#검술", "#리더십", "#복수"],
+      "appearance": "단정한 흑발과 날카로운 눈매. 평소에는 소탈하지만 전투 시 왕자의 위엄이 드러난다. 키 180cm, 단련된 체격.",
+      "personality": "책임감이 강하고 정의롭지만, 때로는 과거의 상처로 인해 고독해한다. 동료들을 아끼며 희생정신이 투철하다.",
+      "skills": [
+        {"name": "왕가의 검술", "description": "루미나스 왕가에 전해 내려오는 고대 검술. 빛의 마력을 검에 깃들게 한다."},
+        {"name": "왕의 카리스마", "description": "타고난 리더십으로 사람들을 이끄는 능력"}
+      ],
+      "image": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400",
+      "createdAt": "2024-01-05T00:00:00Z"
+    },
+    {
+      "id": "char_002",
+      "projectId": "proj_001",
+      "name": "아리아",
+      "alias": "숲의 수호자",
+      "description": "신비로운 엘프 숲의 수호자이자 고대 마법의 계승자. 이로운의 여정에 동행하며 그를 돕는다.",
+      "age": 150,
+      "gender": "여",
+      "role": "조연",
+      "affiliation": "엘베린 숲",
+      "keywords": ["#엘프", "#마법", "#치유", "#활"],
+      "appearance": "은빛 긴 머리와 에메랄드 빛 눈동자. 엘프 특유의 우아함과 신비로움을 지녔다. 키 168cm.",
+      "personality": "침착하고 지혜로우며, 자연을 사랑한다. 때때로 장난스러운 면모를 보이지만 전투에서는 냉철하다.",
+      "skills": [
+        {"name": "자연 마법", "description": "식물을 조종하고 치유하는 고대 엘프 마법"},
+        {"name": "영혼의 활", "description": "마력을 화살로 변환하는 신비한 활 솜씨"}
+      ],
+      "image": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400",
+      "createdAt": "2024-01-06T00:00:00Z"
+    },
+    {
+      "id": "char_003",
+      "projectId": "proj_001",
+      "name": "카이안",
+      "alias": "배신자의 그림자",
+      "description": "과거 이로운의 친구였으나 왕국 멸망의 배후에 있던 인물. 복잡한 사정으로 적이 되었다.",
+      "age": 27,
+      "gender": "남",
+      "role": "적대자",
+      "affiliation": "암흑 제국",
+      "keywords": ["#배신자", "#암흑마법", "#갈등", "#과거"],
+      "appearance": "짙은 흑발과 날카로운 붉은 눈동자. 검은 외투를 걸치고 다니며 음울한 분위기를 풍긴다. 키 185cm.",
+      "personality": "냉소적이고 잔인하지만, 과거에는 밝고 정의로운 인물이었다. 내면에 깊은 상처를 숨기고 있다.",
+      "skills": [
+        {"name": "암흑 검술", "description": "어둠의 마력을 검에 깃들게 하는 금기의 검술"},
+        {"name": "그림자 이동", "description": "그림자를 통해 순간 이동하는 능력"}
+      ],
+      "image": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400",
+      "createdAt": "2024-01-07T00:00:00Z"
+    },
+    {
+      "id": "char_004",
+      "projectId": "proj_001",
+      "name": "리나",
+      "alias": "불꽃의 마녀",
+      "description": "떠돌이 마법사로 우연히 이로운 일행과 함께하게 된다. 밝은 성격으로 분위기 메이커.",
+      "age": 22,
+      "gender": "여",
+      "role": "조연",
+      "affiliation": "마법사 길드",
+      "keywords": ["#화염마법", "#밝음", "#분위기메이커"],
+      "appearance": "붉은 단발머리와 호기심 가득한 갈색 눈동자. 활발하고 쾌활한 인상. 키 162cm.",
+      "personality": "낙천적이고 붙임성 좋으며 호기심이 많다. 위험한 상황에서도 웃음을 잃지 않는다.",
+      "skills": [
+        {"name": "화염 마법", "description": "강력한 화염을 다루는 공격 마법"},
+        {"name": "마나 충전", "description": "주변의 마나를 빠르게 흡수하는 능력"}
+      ],
+      "image": "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400",
+      "createdAt": "2024-01-08T00:00:00Z"
+    },
+    {
+      "id": "char_005",
+      "projectId": "proj_001",
+      "name": "아렌 헬리오스",
+      "alias": "태양의 기사",
+      "description": "제국의 정예 기사단장. 명예와 정의를 중시하며 이로운과 운명적인 만남을 갖는다.",
+      "age": 30,
+      "gender": "남",
+      "role": "조연",
+      "affiliation": "솔라리스 기사단",
+      "keywords": ["#기사", "#명예", "#정의", "#태양"],
+      "appearance": "금발의 짧은 머리와 강인한 체격. 항상 은빛 갑옷을 착용하고 있다. 키 188cm.",
+      "personality": "정의롭고 진지하며 원칙을 중시한다. 때로는 융통성이 부족하지만 신념이 확고하다.",
+      "skills": [
+        {"name": "성검술", "description": "신성한 빛의 힘을 깃든 검술"},
+        {"name": "수호의 결계", "description": "동료를 보호하는 신성 마법"}
+      ],
+      "image": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400",
+      "createdAt": "2024-01-09T00:00:00Z"
+    }
+  ]
+}

@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>캐릭터 상세 - 웹소설 세계관 구축</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
+        rel="stylesheet">
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body class="bg-gray-50 font-sans">
+    <!-- 모바일 오버레이 -->
+    <div id="mobile-overlay" class="mobile-overlay" onclick="utils.toggleSidebar()"></div>
+
+    <!-- 모바일 메뉴 버튼 -->
+    <button class="mobile-menu-btn" onclick="utils.toggleSidebar()">
+        <span class="material-symbols-outlined">menu</span>
+    </button>
+
+    <!-- 사이드바 -->
+    <aside id="sidebar"
+        class="fixed left-0 top-0 h-screen w-64 bg-white border-r border-gray-200 flex flex-col glass-panel">
+        <div class="p-6 border-b border-gray-200">
+            <h2 id="project-name" class="text-xl font-bold text-gray-900">로딩 중...</h2>
+            <p id="project-genre" class="text-sm text-gray-500 mt-1">-</p>
+        </div>
+        <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+            <a href="index.html"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors">
+                <span class="material-symbols-outlined">dashboard</span>
+                <span>대시보드</span>
+            </a>
+            <a href="character_list.html"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg bg-blue-50 text-blue-600 font-medium transition-colors">
+                <span class="material-symbols-outlined">person</span>
+                <span>캐릭터</span>
+            </a>
+            <a href="character_graph.html"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors">
+                <span class="material-symbols-outlined">hub</span>
+                <span>관계도</span>
+            </a>
+            <a href="event_list.html"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors">
+                <span class="material-symbols-outlined">event</span>
+                <span>이벤트</span>
+            </a>
+            <a href="timeline.html"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors">
+                <span class="material-symbols-outlined">timeline</span>
+                <span>타임라인</span>
+            </a>
+            <a href="synopsis.html"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors">
+                <span class="material-symbols-outlined">auto_stories</span>
+                <span>시놉시스</span>
+            </a>
+            <a href="foreshadowing.html"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors">
+                <span class="material-symbols-outlined">help</span>
+                <span>복선/떡밥</span>
+            </a>
+        </nav>
+
+        <!-- 사용자 프로필 -->
+        <div class="p-4 border-t border-gray-200">
+            <div class="flex items-center gap-3">
+                <img id="user-avatar" src="https://ui-avatars.com/api/?name=User&background=4285F4&color=fff"
+                    class="w-10 h-10 rounded-full" alt="프로필">
+                <div class="flex-1 min-w-0">
+                    <p id="user-name" class="text-sm font-medium text-gray-900 truncate"></p>
+                    <p id="user-role" class="text-xs text-gray-500 truncate"></p>
+                </div>
+                <button class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+                    <span class="material-symbols-outlined text-lg">settings</span>
+                </button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- 메인 컨텐츠 -->
+    <main class="ml-64 p-8 transition-all duration-300">
+        <div class="max-w-5xl mx-auto animate-fade-in">
+            <!-- 상단 네비게이션 -->
+            <div class="mb-6">
+                <a href="character_list.html"
+                    class="flex items-center text-gray-600 hover:text-blue-600 transition-colors">
+                    <span class="material-symbols-outlined text-xl mr-1">arrow_back</span>
+                    목록으로 돌아가기
+                </a>
+            </div>
+
+            <!-- 캐릭터 상세 카드 -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden glass-panel">
+                <!-- 상단 배너/커버 (임시 배경색) -->
+                <div class="h-48 bg-gradient-to-r from-blue-500 to-purple-600 relative">
+                    <div class="absolute bottom-4 right-4 flex gap-2">
+                        <button onclick="editCharacter()"
+                            class="px-4 py-2 bg-white/20 backdrop-blur-md text-white rounded-lg hover:bg-white/30 transition-colors flex items-center gap-2">
+                            <span class="material-symbols-outlined text-sm">edit</span>
+                            수정
+                        </button>
+                        <button onclick="deleteCharacter()"
+                            class="px-4 py-2 bg-white/20 backdrop-blur-md text-white rounded-lg hover:bg-red-500/50 transition-colors flex items-center gap-2">
+                            <span class="material-symbols-outlined text-sm">delete</span>
+                            삭제
+                        </button>
+                    </div>
+                </div>
+
+                <div class="px-8 pb-8">
+                    <!-- 프로필 헤더 -->
+                    <div class="flex flex-col md:flex-row gap-8 -mt-16 mb-8 relative z-10">
+                        <div class="flex-shrink-0">
+                            <img id="char-image" src="" alt="캐릭터 이미지"
+                                class="w-40 h-40 rounded-full border-4 border-white shadow-lg object-cover bg-gray-100">
+                        </div>
+                        <div class="flex-1 pt-16 md:pt-20">
+                            <div class="flex items-start justify-between">
+                                <div>
+                                    <h1 id="char-name" class="text-3xl font-bold text-gray-900 mb-2"></h1>
+                                    <div class="flex flex-wrap gap-2 mb-4">
+                                        <span id="char-role"
+                                            class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium"></span>
+                                        <span id="char-age"
+                                            class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm"></span>
+                                        <span id="char-gender"
+                                            class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm"></span>
+                                        <span id="char-mbti"
+                                            class="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-medium"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 상세 정보 그리드 -->
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <!-- 왼쪽: 기본 정보 -->
+                        <div class="lg:col-span-2 space-y-8">
+                            <!-- 한줄 소개 -->
+                            <section>
+                                <h3 class="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-blue-600">format_quote</span>
+                                    한줄 소개
+                                </h3>
+                                <div class="bg-gray-50 p-6 rounded-xl border border-gray-100">
+                                    <p id="char-description" class="text-gray-700 text-lg leading-relaxed italic"></p>
+                                </div>
+                            </section>
+
+                            <!-- 성격 및 특징 -->
+                            <section>
+                                <h3 class="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-blue-600">psychology</span>
+                                    성격 및 특징
+                                </h3>
+                                <div class="bg-white border border-gray-200 rounded-xl p-6">
+                                    <p id="char-personality" class="text-gray-700 whitespace-pre-line leading-relaxed">
+                                    </p>
+                                </div>
+                            </section>
+
+                            <!-- 배경 스토리 -->
+                            <section>
+                                <h3 class="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-blue-600">history_edu</span>
+                                    배경 스토리
+                                </h3>
+                                <div class="bg-white border border-gray-200 rounded-xl p-6">
+                                    <p id="char-background" class="text-gray-700 whitespace-pre-line leading-relaxed">
+                                    </p>
+                                </div>
+                            </section>
+                        </div>
+
+                        <!-- 오른쪽: 관계 및 기타 -->
+                        <div class="space-y-6">
+                            <!-- 주요 관계 -->
+                            <section class="bg-gray-50 rounded-xl p-6 border border-gray-200">
+                                <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-blue-600">group</span>
+                                    주요 관계
+                                </h3>
+                                <div id="relationships-list" class="space-y-3">
+                                    <!-- 관계 아이템 -->
+                                    <p class="text-gray-500 text-sm text-center py-4">등록된 관계가 없습니다.</p>
+                                </div>
+                                <button onclick="location.href='character_graph.html'"
+                                    class="w-full mt-4 py-2 text-sm text-blue-600 hover:bg-blue-50 rounded-lg border border-blue-200 transition-colors">
+                                    관계도 보기
+                                </button>
+                            </section>
+
+                            <!-- 등장 이벤트 -->
+                            <section class="bg-gray-50 rounded-xl p-6 border border-gray-200">
+                                <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-blue-600">event_note</span>
+                                    등장 이벤트
+                                </h3>
+                                <div id="events-list" class="space-y-3">
+                                    <!-- 이벤트 아이템 -->
+                                    <p class="text-gray-500 text-sm text-center py-4">참여한 이벤트가 없습니다.</p>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <!-- Scripts -->
+    <script src="./js/utils.js"></script>
+    <script src="./js/data-loader.js"></script>
+    <script src="./js/character-form.js"></script>
+    <script src="./js/character-store.js"></script>
+    <script>
+        let character = null;
+        let currentCharacterId = null;
+
+        // 페이지 초기화
+        async function initCharacterDetail() {
+            try {
+                // URL에서 캐릭터 ID 가져오기
+                const urlParams = new URLSearchParams(window.location.search);
+                currentCharacterId = urlParams.get('id');
+
+                if (!currentCharacterId) {
+                    utils.showError('#character-container', '캐릭터 ID가 없습니다.');
+                    return;
+                }
+
+                // 프로젝트 정보 로드
+                const project = await dataLoader.getActiveProject();
+                if (project) {
+                    document.getElementById('project-name').textContent = project.name;
+                    document.getElementById('project-genre').textContent = project.genre;
+                }
+
+                // CharacterStore를 통해 캐릭터 데이터 로드 (localStorage 변경사항 포함)
+                character = await characterStore.getCharacterById(currentCharacterId);
+
+                if (!character) {
+                    utils.showError('.max-w-5xl', '캐릭터를 찾을 수 없습니다.'); // Updated selector
+                    return;
+                }
+
+                // 캐릭터 렌더링
+                renderCharacter(character);
+
+                // 버튼 이벤트 설정 (Moved to global functions)
+                // setupButtons();
+            } catch (error) {
+                console.error('Error:', error);
+                utils.showError('.max-w-5xl', '데이터를 불러오는데 실패했습니다.'); // Updated selector
+            }
+        }
+
+        // Global functions for buttons
+        function editCharacter() {
+            if (currentCharacterId) {
+                characterForm.showEditModal(currentCharacterId);
+            }
+        }
+
+        function deleteCharacter() {
+            if (currentCharacterId) {
+                characterForm.showDeleteModal(currentCharacterId);
+            }
+        }
+
+        // 캐릭터 이미지 URL 가져오기 (local: prefix 처리)
+        function getCharacterImageUrl(char) {
+            const imageUrl = characterStore.getCharacterImageUrl(char);
+            if (imageUrl) return imageUrl;
+            // 폴백 아바타
+            return `https://ui-avatars.com/api/?name=${encodeURIComponent(char.name)}&background=random&size=400`;
+        }
+
+        // 캐릭터 렌더링
+        // 캐릭터 렌더링
+        function renderCharacter(char) {
+            // 이미지
+            const imageUrl = getCharacterImageUrl(char);
+            const charImage = document.getElementById('char-image');
+            charImage.src = imageUrl;
+            charImage.onerror = function () {
+                this.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(char.name)}&background=random&size=400`;
+            };
+
+            // 기본 정보
+            document.getElementById('char-name').textContent = char.name;
+            document.getElementById('char-role').textContent = char.role || '역할 미정';
+            document.getElementById('char-age').textContent = char.age ? `${char.age}세` : '나이 미상';
+            document.getElementById('char-gender').textContent = char.gender || '성별 미상';
+            document.getElementById('char-mbti').textContent = char.mbti || 'MBTI 미정';
+
+            // 상세 정보
+            document.getElementById('char-description').textContent = char.description || '한줄 소개가 없습니다.';
+            document.getElementById('char-personality').textContent = char.personality || '성격 및 특징 정보가 없습니다.';
+            document.getElementById('char-background').textContent = char.background || '배경 스토리가 없습니다.';
+
+            // 관계 목록
+            const relationshipsList = document.getElementById('relationships-list');
+            if (char.relationships && char.relationships.length > 0) {
+                relationshipsList.innerHTML = char.relationships.map(rel => `
+                    <div class="flex items-center justify-between p-3 bg-white rounded-lg border border-gray-200">
+                        <span class="font-medium text-gray-900">${rel.targetName}</span>
+                        <span class="text-sm text-gray-500">${rel.description}</span>
+                    </div>
+                `).join('');
+            } else {
+                relationshipsList.innerHTML = '<p class="text-gray-500 text-sm text-center py-4">등록된 관계가 없습니다.</p>';
+            }
+
+            // 이벤트 목록 로드
+            loadCharacterEvents(char.id);
+        }
+
+        // 캐릭터 등장 이벤트 로드
+        async function loadCharacterEvents(characterId) {
+            const eventsList = document.getElementById('events-list');
+
+            try {
+                // 프로젝트의 모든 이벤트 가져오기
+                const project = await dataLoader.getActiveProject();
+                const allEvents = await eventStore.getMergedEvents(project.id);
+
+                // 해당 캐릭터가 참여한 이벤트 필터링
+                const charEvents = allEvents.filter(evt =>
+                    evt.relatedCharacters && evt.relatedCharacters.includes(characterId)
+                );
+
+                if (charEvents.length > 0) {
+                    eventsList.innerHTML = charEvents.map(evt => `
+                        <a href="event_detail.html?id=${evt.id}"
+                           class="block p-3 bg-white rounded-lg border border-gray-200 hover:bg-blue-50 hover:border-blue-200 transition-colors">
+                            <div class="flex items-center gap-3">
+                                <span class="material-symbols-outlined text-blue-500">event</span>
+                                <div class="flex-1 min-w-0">
+                                    <p class="font-medium text-gray-900 truncate">${utils.escapeHtml(evt.title)}</p>
+                                    <p class="text-xs text-gray-500">${utils.escapeHtml(evt.date || '날짜 미정')}</p>
+                                </div>
+                                <span class="px-2 py-0.5 text-xs rounded-full ${getImportanceClass(evt.importance)}">${utils.escapeHtml(evt.importance || '미정')}</span>
+                            </div>
+                        </a>
+                    `).join('');
+                } else {
+                    eventsList.innerHTML = '<p class="text-gray-500 text-sm text-center py-4">참여한 이벤트가 없습니다.</p>';
+                }
+            } catch (error) {
+                console.error('Error loading character events:', error);
+                eventsList.innerHTML = '<p class="text-red-500 text-sm text-center py-4">이벤트를 불러오는데 실패했습니다.</p>';
+            }
+        }
+
+        // 중요도에 따른 스타일 클래스
+        function getImportanceClass(importance) {
+            switch(importance) {
+                case '최상': return 'bg-red-100 text-red-700';
+                case '상': return 'bg-orange-100 text-orange-700';
+                case '중': return 'bg-yellow-100 text-yellow-700';
+                case '하': return 'bg-green-100 text-green-700';
+                default: return 'bg-gray-100 text-gray-600';
+            }
+        }
+
+        // 페이지 로드 시 초기화
+        document.addEventListener('DOMContentLoaded', () => {
+            utils.initUserProfile();
+            initCharacterDetail();
+        });
+    </script>
+</body>
+
+</html>

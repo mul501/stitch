@@ -1,0 +1,34 @@
+{
+  "projects": [
+    {
+      "id": "proj_001",
+      "name": "잃어버린 왕국",
+      "description": "고대 왕국의 마지막 후계자가 왕국을 되찾는 판타지 서사시",
+      "genre": "판타지",
+      "author": "김작가",
+      "active": true,
+      "createdAt": "2024-01-01T00:00:00Z",
+      "updatedAt": "2024-11-24T00:00:00Z"
+    },
+    {
+      "id": "proj_002",
+      "name": "회귀한 천재 마법사",
+      "description": "역대급 재능으로 회귀하여 세계를 구하는 이야기",
+      "genre": "판타지/회귀물",
+      "author": "김작가",
+      "active": false,
+      "createdAt": "2024-02-15T00:00:00Z",
+      "updatedAt": "2024-10-20T00:00:00Z"
+    },
+    {
+      "id": "proj_003",
+      "name": "재벌가의 막내딸",
+      "description": "재벌가의 막내딸로 환생하여 가문을 지키는 로맨스 판타지",
+      "genre": "로맨스판타지",
+      "author": "김작가",
+      "active": false,
+      "createdAt": "2024-03-10T00:00:00Z",
+      "updatedAt": "2024-09-15T00:00:00Z"
+    }
+  ]
+}

@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>캐릭터 관계도 - 웹소설 세계관 구축</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
+        rel="stylesheet">
+    <!-- vis.js Network -->
+    <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body class="bg-gray-50 font-sans h-screen overflow-hidden">
+    <!-- 모바일 오버레이 -->
+    <div id="mobile-overlay" class="mobile-overlay" onclick="utils.toggleSidebar()"></div>
+
+    <!-- 모바일 메뉴 버튼 -->
+    <button class="mobile-menu-btn" onclick="utils.toggleSidebar()">
+        <span class="material-symbols-outlined">menu</span>
+    </button>
+
+    <!-- 사이드바 -->
+    <aside id="sidebar"
+        class="fixed left-0 top-0 h-screen w-64 bg-white border-r border-gray-200 flex flex-col glass-panel">
+        <div class="p-6 border-b border-gray-200">
+            <h2 id="project-name" class="text-xl font-bold text-gray-900">로딩 중...</h2>
+            <p id="project-genre" class="text-sm text-gray-500 mt-1">-</p>
+        </div>
+        <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+            <a href="index.html"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors">
+                <span class="material-symbols-outlined">dashboard</span>
+                <span>대시보드</span>
+            </a>
+            <a href="character_list.html"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors">
+                <span class="material-symbols-outlined">person</span>
+                <span>캐릭터</span>
+            </a>
+            <a href="character_graph.html"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg bg-blue-50 text-blue-600 font-medium transition-colors">
+                <span class="material-symbols-outlined">hub</span>
+                <span>관계도</span>
+            </a>
+            <a href="event_list.html"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors">
+                <span class="material-symbols-outlined">event</span>
+                <span>이벤트</span>
+            </a>
+            <a href="timeline.html"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors">
+                <span class="material-symbols-outlined">timeline</span>
+                <span>타임라인</span>
+            </a>
+            <a href="synopsis.html"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors">
+                <span class="material-symbols-outlined">auto_stories</span>
+                <span>시놉시스</span>
+            </a>
+            <a href="foreshadowing.html"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors">
+                <span class="material-symbols-outlined">help</span>
+                <span>복선/떡밥</span>
+            </a>
+        </nav>
+
+        <!-- 사용자 프로필 -->
+        <div class="p-4 border-t border-gray-200">
+            <div class="flex items-center gap-3">
+                <img id="user-avatar" src="https://ui-avatars.com/api/?name=User&background=4285F4&color=fff"
+                    class="w-10 h-10 rounded-full" alt="프로필">
+                <div class="flex-1 min-w-0">
+                    <p id="user-name" class="text-sm font-medium text-gray-900 truncate"></p>
+                    <p id="user-role" class="text-xs text-gray-500 truncate"></p>
+                </div>
+                <button class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+                    <span class="material-symbols-outlined text-lg">settings</span>
+                </button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- 메인 컨텐츠 -->
+    <main class="ml-64 h-full flex flex-col transition-all duration-300">
+        <!-- 헤더 -->
+        <header class="bg-white border-b border-gray-200 px-8 py-4 flex justify-between items-center glass-panel z-10">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-900">인물 관계도</h1>
+                <p class="text-sm text-gray-600">캐릭터 간의 관계를 시각적으로 확인하세요</p>
+            </div>
+            <div class="flex gap-2">
+                <button onclick="zoomIn()" class="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+                    <span class="material-symbols-outlined">add</span>
+                </button>
+                <button onclick="zoomOut()" class="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+                    <span class="material-symbols-outlined">remove</span>
+                </button>
+                <button onclick="resetZoom()" class="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+                    <span class="material-symbols-outlined">center_focus_strong</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- 그래프 영역 제거됨 (중복) -->
+
+        <div class="max-w-7xl mx-auto">
+            <!-- 필터 및 범례 -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
+                <div class="flex flex-wrap items-center gap-6">
+                    <!-- 관계 유형 필터 -->
+                    <div>
+                        <span class="text-sm font-medium text-gray-700 mr-3">관계 유형:</span>
+                        <div id="type-filters" class="inline-flex flex-wrap gap-2">
+                            <!-- 동적 생성 -->
+                        </div>
+                    </div>
+
+                    <!-- 캐릭터 필터 -->
+                    <div class="flex items-center gap-2">
+                        <span class="text-sm font-medium text-gray-700">캐릭터:</span>
+                        <select id="character-filter"
+                            class="border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option value="">전체 보기</option>
+                            <!-- 동적 생성 -->
+                        </select>
+                    </div>
+
+                    <!-- 리셋 버튼 -->
+                    <button id="reset-btn"
+                        class="px-3 py-1.5 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg flex items-center gap-1">
+                        <span class="material-symbols-outlined text-sm">refresh</span>
+                        초기화
+                    </button>
+                </div>
+
+                <!-- 범례 -->
+                <div class="mt-4 pt-4 border-t border-gray-200">
+                    <span class="text-sm font-medium text-gray-700 mr-3">역할:</span>
+                    <div class="inline-flex gap-4 text-sm">
+                        <span class="flex items-center gap-1">
+                            <span class="w-4 h-4 rounded-full bg-blue-200 border-2 border-blue-500"></span>
+                            주인공
+                        </span>
+                        <span class="flex items-center gap-1">
+                            <span class="w-4 h-4 rounded-full bg-green-200 border-2 border-green-500"></span>
+                            조연
+                        </span>
+                        <span class="flex items-center gap-1">
+                            <span class="w-4 h-4 rounded-full bg-red-200 border-2 border-red-500"></span>
+                            적대자
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 그래프 영역 -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
+                <div id="network-container">
+                    <!-- vis.js Network 렌더링 -->
+                    <div class="flex items-center justify-center h-full">
+                        <div class="text-center">
+                            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4">
+                            </div>
+                            <p class="text-gray-600">관계도 로딩 중...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 상세 정보 패널 -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-semibold text-gray-900">선택 정보</h3>
+                    <button id="add-relationship-btn"
+                        class="px-3 py-1.5 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-1">
+                        <span class="material-symbols-outlined text-sm">add</span>
+                        관계 추가
+                    </button>
+                </div>
+                <div id="detail-panel">
+                    <div class="text-center text-gray-500 py-4">
+                        <span class="material-symbols-outlined text-4xl mb-2">info</span>
+                        <p>노드나 관계선을 클릭하면 상세 정보가 표시됩니다</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="./js/utils.js"></script>
+    <script src="./js/data-loader.js"></script>
+    <script src="./js/graph-utils.js"></script>
+    <script>
+        let network = null;
+        let allNodes = [];
+        let allEdges = [];
+        let allCharacters = [];
+        let relationshipTypes = [];
+        let selectedTypes = [];
+        let currentEditMode = 'view'; // 'view' | 'edit' | 'create'
+        let currentRelationship = null;
+        let currentProjectId = null;
+
+        // 페이지 초기화
+        async function initGraph() {
+            try {
+                const project = await dataLoader.getActiveProject();
+
+                if (project) {
+                    currentProjectId = project.id;
+                    document.getElementById('project-name').textContent = project.name;
+                    document.getElementById('project-genre').textContent = project.genre;
+
+                    // 데이터 로드 (병합된 캐릭터 및 관계 데이터 사용)
+                    const [characters, relationships, types] = await Promise.all([
+                        characterStore.getMergedCharacters(project.id),
+                        relationshipStore.getMergedRelationships(project.id),
+                        dataLoader.getRelationshipTypes()
+                    ]);
+
+                    // 캐릭터 이미지 URL 처리 (local: prefix)
+                    allCharacters = characters.map(char => ({
+                        ...char,
+                        image: characterStore.getCharacterImageUrl(char) ||
+                            `https://ui-avatars.com/api/?name=${encodeURIComponent(char.name)}&background=random&size=100`
+                    }));
+                    relationshipTypes = types;
+
+                    // vis.js 데이터 변환 (이미지 처리된 캐릭터 사용)
+                    allNodes = graphUtils.charactersToNodes(allCharacters);
+                    allEdges = graphUtils.relationshipsToEdges(relationships, types);
+
+                    // 필터 UI 생성
+                    createTypeFilters(types);
+                    createCharacterFilter(characters);
+
+                    // 초기에 모든 유형 선택
+                    selectedTypes = types.map(t => t.type);
+
+                    // 그래프 렌더링
+                    renderNetwork(allNodes, allEdges);
+
+                    // 관계 추가 버튼 이벤트
+                    document.getElementById('add-relationship-btn').addEventListener('click', startAddRelationship);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('network-container').innerHTML = `
+                    <div class="flex items-center justify-center h-full text-red-500">
+                        <div class="text-center">
+                            <span class="material-symbols-outlined text-4xl mb-2">error</span>
+                            <p>데이터를 불러오는데 실패했습니다.</p>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // ========================================
+        // 관계 CRUD 함수들
+        // ========================================
+
+        // 새 관계 추가 모드
+        function startAddRelationship() {
+            currentEditMode = 'create';
+            currentRelationship = null;
+
+            document.getElementById('detail-panel').innerHTML = `
+                <h4 class="font-medium text-gray-900 mb-4 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-blue-600">add_circle</span>
+                    새 관계 추가
+                </h4>
+                ${graphUtils.createRelationshipEditFormHtml(null, allCharacters, relationshipTypes, true)}
+            `;
+            setupFormEventListeners();
+        }
+
+        // 관계 편집 모드
+        function startEditRelationship(relationship) {
+            currentEditMode = 'edit';
+            currentRelationship = relationship;
+
+            document.getElementById('detail-panel').innerHTML = `
+                <h4 class="font-medium text-gray-900 mb-4 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-blue-600">edit</span>
+                    관계 수정
+                </h4>
+                ${graphUtils.createRelationshipEditFormHtml(relationship, allCharacters, relationshipTypes, false)}
+            `;
+            setupFormEventListeners();
+        }
+
+        // 폼 이벤트 리스너 설정
+        function setupFormEventListeners() {
+            // 관계 유형 변경 -> 세부유형 업데이트
+            const typeSelect = document.getElementById('rel-type-select');
+            typeSelect?.addEventListener('change', (e) => {
+                const selectedType = relationshipTypes.find(t => t.type === e.target.value);
+                const subtypeSelect = document.getElementById('rel-subtype-select');
+                subtypeSelect.innerHTML = `
+                    <option value="">선택 안함</option>
+                    ${(selectedType?.subtypes || []).map(s => `<option value="${s}">${s}</option>`).join('')}
+                `;
+            });
+
+            // 강도 별점 클릭
+            document.querySelectorAll('.strength-star').forEach(star => {
+                star.addEventListener('click', (e) => {
+                    const value = parseInt(e.target.dataset.value);
+                    document.querySelector('input[name="strength"]').value = value;
+                    document.querySelectorAll('.strength-star').forEach((s, i) => {
+                        s.classList.toggle('text-yellow-400', i < value);
+                        s.classList.toggle('text-gray-300', i >= value);
+                    });
+                });
+            });
+
+            // 취소 버튼
+            document.getElementById('cancel-edit-btn')?.addEventListener('click', resetDetailPanel);
+
+            // 삭제 버튼
+            document.getElementById('delete-rel-btn')?.addEventListener('click', () => {
+                if (confirm('이 관계를 삭제하시겠습니까?')) {
+                    handleDeleteRelationship();
+                }
+            });
+
+            // 폼 제출
+            document.getElementById('relationship-form')?.addEventListener('submit', (e) => {
+                e.preventDefault();
+                handleSaveRelationship();
+            });
+        }
+
+        // 저장 처리
+        async function handleSaveRelationship() {
+            const form = document.getElementById('relationship-form');
+            const formData = new FormData(form);
+
+            // 키워드 파싱
+            const keywordsRaw = formData.get('keywords') || '';
+            const keywords = keywordsRaw
+                .split(',')
+                .map(k => k.trim())
+                .filter(k => k);
+
+            // 캐릭터 ID 추출
+            const sourceId = formData.get('sourceId');
+            const targetId = formData.get('targetId');
+
+            // 유효성 검사
+            if (currentEditMode === 'create') {
+                if (!sourceId || !targetId) {
+                    utils.showToast('캐릭터를 선택해주세요', 'error');
+                    return;
+                }
+                if (sourceId === targetId) {
+                    utils.showToast('서로 다른 캐릭터를 선택해주세요', 'error');
+                    return;
+                }
+            }
+
+            // 데이터 구성
+            const data = {
+                sourceId: sourceId || currentRelationship?.sourceId,
+                targetId: targetId || currentRelationship?.targetId,
+                type: formData.get('type'),
+                subtype: formData.get('subtype') || null,
+                strength: parseInt(formData.get('strength')) || 3,
+                bidirectional: formData.get('bidirectional') === 'on',
+                description: formData.get('description') || '',
+                keywords: keywords,
+                projectId: currentProjectId
+            };
+
+            try {
+                if (currentEditMode === 'create') {
+                    relationshipStore.create(data);
+                    utils.showToast('관계가 추가되었습니다', 'success');
+                } else {
+                    relationshipStore.update(currentRelationship.id, data);
+                    utils.showToast('관계가 수정되었습니다', 'success');
+                }
+
+                await refreshGraph();
+                resetDetailPanel();
+            } catch (error) {
+                console.error('Save error:', error);
+                utils.showToast('저장 중 오류가 발생했습니다', 'error');
+            }
+        }
+
+        // 삭제 처리
+        async function handleDeleteRelationship() {
+            if (!currentRelationship) return;
+
+            try {
+                relationshipStore.delete(currentRelationship.id);
+                utils.showToast('관계가 삭제되었습니다', 'success');
+                await refreshGraph();
+                resetDetailPanel();
+            } catch (error) {
+                console.error('Delete error:', error);
+                utils.showToast('삭제 중 오류가 발생했습니다', 'error');
+            }
+        }
+
+        // 그래프 새로고침
+        async function refreshGraph() {
+            const relationships = await relationshipStore.getMergedRelationships(currentProjectId);
+            allEdges = graphUtils.relationshipsToEdges(relationships, relationshipTypes);
+            applyFilters();
+        }
+
+        // 상세 패널 초기화
+        function resetDetailPanel() {
+            currentEditMode = 'view';
+            currentRelationship = null;
+            document.getElementById('detail-panel').innerHTML = `
+                <div class="text-center text-gray-500 py-4">
+                    <span class="material-symbols-outlined text-4xl mb-2">info</span>
+                    <p>노드나 관계선을 클릭하면 상세 정보가 표시됩니다</p>
+                </div>
+            `;
+        }
+
+        // 관계 유형 필터 생성
+        function createTypeFilters(types) {
+            const container = document.getElementById('type-filters');
+            container.innerHTML = types.map(type => `
+                <label class="inline-flex items-center gap-1.5 cursor-pointer">
+                    <input type="checkbox" value="${type.type}" checked
+                        class="type-checkbox w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                        onchange="handleTypeFilter()">
+                    <span class="flex items-center gap-1">
+                        <span class="w-3 h-3 rounded-full" style="background-color: ${type.color}"></span>
+                        <span class="text-sm">${type.type}</span>
+                    </span>
+                </label>
+            `).join('');
+        }
+
+        // 캐릭터 필터 생성
+        function createCharacterFilter(characters) {
+            const select = document.getElementById('character-filter');
+            characters.forEach(char => {
+                const option = document.createElement('option');
+                option.value = char.id;
+                option.textContent = `${char.name} (${char.role})`;
+                select.appendChild(option);
+            });
+
+            select.addEventListener('change', handleCharacterFilter);
+        }
+
+        // 그래프 렌더링
+        function renderNetwork(nodes, edges) {
+            const container = document.getElementById('network-container');
+            const data = {
+                nodes: new vis.DataSet(nodes),
+                edges: new vis.DataSet(edges)
+            };
+
+            const options = graphUtils.getNetworkOptions();
+
+            network = new vis.Network(container, data, options);
+
+            // 이벤트 리스너
+            network.on('click', handleNetworkClick);
+            network.on('stabilizationProgress', (params) => {
+                const progress = Math.round((params.iterations / params.total) * 100);
+                console.log(`안정화 중: ${progress}%`);
+            });
+            network.on('stabilizationIterationsDone', () => {
+                console.log('그래프 안정화 완료');
+            });
+        }
+
+        // 네트워크 클릭 핸들러
+        function handleNetworkClick(params) {
+            const detailPanel = document.getElementById('detail-panel');
+
+            if (params.edges.length > 0 && params.nodes.length === 0) {
+                // 엣지 클릭 - 관계 상세 + 수정 버튼
+                const edgeId = params.edges[0];
+                const edge = allEdges.find(e => e.id === edgeId);
+
+                detailPanel.innerHTML = `
+                    ${graphUtils.createRelationshipDetailHtml(edge, allCharacters)}
+                    <div class="mt-4 pt-4 border-t border-gray-200 flex justify-end">
+                        <button id="edit-relationship-btn"
+                            class="px-4 py-2 text-blue-600 hover:bg-blue-50 rounded-lg text-sm transition-colors flex items-center gap-1">
+                            <span class="material-symbols-outlined text-sm">edit</span>
+                            수정
+                        </button>
+                    </div>
+                `;
+
+                // 수정 버튼 이벤트
+                document.getElementById('edit-relationship-btn')?.addEventListener('click', () => {
+                    startEditRelationship(edge.relationshipData);
+                });
+
+            } else if (params.nodes.length > 0) {
+                // 노드 클릭 - 캐릭터 상세
+                const nodeId = params.nodes[0];
+                const character = allCharacters.find(c => c.id === nodeId);
+                detailPanel.innerHTML = graphUtils.createNodeDetailHtml(null, character);
+            } else {
+                // 빈 공간 클릭
+                resetDetailPanel();
+            }
+        }
+
+        // 관계 유형 필터 핸들러
+        function handleTypeFilter() {
+            const checkboxes = document.querySelectorAll('.type-checkbox');
+            selectedTypes = Array.from(checkboxes)
+                .filter(cb => cb.checked)
+                .map(cb => cb.value);
+
+            applyFilters();
+        }
+
+        // 캐릭터 필터 핸들러
+        function handleCharacterFilter() {
+            applyFilters();
+        }
+
+        // 필터 적용
+        function applyFilters() {
+            const characterId = document.getElementById('character-filter').value;
+
+            // 관계 유형 필터
+            let filteredEdges = graphUtils.filterByRelationshipTypes(allEdges, selectedTypes);
+
+            // 캐릭터 필터
+            let filteredNodes = allNodes;
+            if (characterId) {
+                const result = graphUtils.filterConnectedToCharacter(allNodes, filteredEdges, characterId);
+                filteredNodes = result.nodes;
+                filteredEdges = result.edges;
+            }
+
+            // 네트워크 업데이트
+            if (network) {
+                network.setData({
+                    nodes: new vis.DataSet(filteredNodes),
+                    edges: new vis.DataSet(filteredEdges)
+                });
+            }
+        }
+
+        // 초기화 버튼
+        document.getElementById('reset-btn').addEventListener('click', () => {
+            // 체크박스 모두 체크
+            document.querySelectorAll('.type-checkbox').forEach(cb => cb.checked = true);
+            selectedTypes = relationshipTypes.map(t => t.type);
+
+            // 캐릭터 필터 초기화
+            document.getElementById('character-filter').value = '';
+
+            // 그래프 초기화
+            renderNetwork(allNodes, allEdges);
+
+            // 상세 패널 초기화
+            document.getElementById('detail-panel').innerHTML = `
+                <div class="text-center text-gray-500 py-4">
+                    <span class="material-symbols-outlined text-4xl mb-2">info</span>
+                    <p>노드나 관계선을 클릭하면 상세 정보가 표시됩니다</p>
+                </div>
+            `;
+        });
+
+        // 줌 컨트롤
+        function zoomIn() {
+            if (network) {
+                const scale = network.getScale();
+                network.moveTo({ scale: scale + 0.2 });
+            }
+        }
+
+        function zoomOut() {
+            if (network) {
+                const scale = network.getScale();
+                network.moveTo({ scale: scale - 0.2 });
+            }
+        }
+
+        function resetZoom() {
+            if (network) {
+                network.fit({
+                    animation: true
+                });
+            }
+        }
+
+        // 페이지 로드 시 초기화
+        document.addEventListener('DOMContentLoaded', () => {
+            utils.initUserProfile();
+            initGraph();
+        });
+    </script>
+</body>
+
+</html>

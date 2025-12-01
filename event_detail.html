@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>이벤트 상세 - 웹소설 세계관 구축</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
+        rel="stylesheet">
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body class="bg-gray-50 font-sans">
+    <!-- 모바일 오버레이 -->
+    <div id="mobile-overlay" class="mobile-overlay" onclick="utils.toggleSidebar()"></div>
+
+    <!-- 모바일 메뉴 버튼 -->
+    <button class="mobile-menu-btn" onclick="utils.toggleSidebar()">
+        <span class="material-symbols-outlined">menu</span>
+    </button>
+
+    <!-- 사이드바 -->
+    <aside id="sidebar"
+        class="fixed left-0 top-0 h-screen w-64 bg-white border-r border-gray-200 flex flex-col glass-panel">
+        <div class="p-6 border-b border-gray-200">
+            <h2 id="project-name" class="text-xl font-bold text-gray-900">로딩 중...</h2>
+            <p id="project-genre" class="text-sm text-gray-500 mt-1">-</p>
+        </div>
+        <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+            <a href="index.html"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors">
+                <span class="material-symbols-outlined">dashboard</span>
+                <span>대시보드</span>
+            </a>
+            <a href="character_list.html"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors">
+                <span class="material-symbols-outlined">person</span>
+                <span>캐릭터</span>
+            </a>
+            <a href="character_graph.html"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors">
+                <span class="material-symbols-outlined">hub</span>
+                <span>관계도</span>
+            </a>
+            <a href="event_list.html"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg bg-blue-50 text-blue-600 font-medium transition-colors">
+                <span class="material-symbols-outlined">event</span>
+                <span>이벤트</span>
+            </a>
+            <a href="timeline.html"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors">
+                <span class="material-symbols-outlined">timeline</span>
+                <span>타임라인</span>
+            </a>
+            <a href="synopsis.html"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors">
+                <span class="material-symbols-outlined">auto_stories</span>
+                <span>시놉시스</span>
+            </a>
+            <a href="foreshadowing.html"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors">
+                <span class="material-symbols-outlined">help</span>
+                <span>복선/떡밥</span>
+            </a>
+        </nav>
+
+        <!-- 사용자 프로필 -->
+        <div class="p-4 border-t border-gray-200">
+            <div class="flex items-center gap-3">
+                <img id="user-avatar" src="https://ui-avatars.com/api/?name=User&background=4285F4&color=fff"
+                    class="w-10 h-10 rounded-full" alt="프로필">
+                <div class="flex-1 min-w-0">
+                    <p id="user-name" class="text-sm font-medium text-gray-900 truncate"></p>
+                    <p id="user-role" class="text-xs text-gray-500 truncate"></p>
+                </div>
+                <button class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+                    <span class="material-symbols-outlined text-lg">settings</span>
+                </button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- 메인 컨텐츠 -->
+    <main class="ml-64 p-8 transition-all duration-300">
+        <div class="max-w-5xl mx-auto animate-fade-in">
+            <!-- 상단 네비게이션 -->
+            <div class="mb-6">
+                <a href="event_list.html" class="flex items-center text-gray-600 hover:text-blue-600 transition-colors">
+                    <span class="material-symbols-outlined text-xl mr-1">arrow_back</span>
+                    목록으로 돌아가기
+                </a>
+            </div>
+
+            <!-- 이벤트 상세 카드 -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden glass-panel">
+                <!-- 상단 이미지 배너 -->
+                <div class="h-64 bg-gray-200 relative">
+                    <img id="event-image" src="" alt="이벤트 이미지" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+
+                    <div class="absolute bottom-6 left-8 right-8 flex justify-between items-end">
+                        <div>
+                            <div class="flex gap-2 mb-2">
+                                <span id="event-type"
+                                    class="px-3 py-1 bg-blue-500/80 backdrop-blur-sm text-white rounded-full text-sm font-medium"></span>
+                                <span id="event-date"
+                                    class="px-3 py-1 bg-gray-800/60 backdrop-blur-sm text-white rounded-full text-sm flex items-center gap-1">
+                                    <span class="material-symbols-outlined text-sm">calendar_today</span>
+                                    <span class="date-text"></span>
+                                </span>
+                            </div>
+                            <h1 id="event-title" class="text-3xl font-bold text-white shadow-sm"></h1>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="editEvent()"
+                                class="px-4 py-2 bg-white/20 backdrop-blur-md text-white rounded-lg hover:bg-white/30 transition-colors flex items-center gap-2">
+                                <span class="material-symbols-outlined text-sm">edit</span>
+                                수정
+                            </button>
+                            <button onclick="deleteEvent()"
+                                class="px-4 py-2 bg-white/20 backdrop-blur-md text-white rounded-lg hover:bg-red-500/50 transition-colors flex items-center gap-2">
+                                <span class="material-symbols-outlined text-sm">delete</span>
+                                삭제
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-8">
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <!-- 왼쪽: 상세 내용 -->
+                        <div class="lg:col-span-2 space-y-8">
+                            <!-- 설명 -->
+                            <section>
+                                <h3 class="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-blue-600">description</span>
+                                    상세 내용
+                                </h3>
+                                <div class="bg-gray-50 p-6 rounded-xl border border-gray-100">
+                                    <p id="event-description"
+                                        class="text-gray-700 text-lg leading-relaxed whitespace-pre-line"></p>
+                                </div>
+                            </section>
+
+                            <!-- 결과 및 영향 -->
+                            <section>
+                                <h3 class="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-blue-600">trending_up</span>
+                                    결과 및 영향
+                                </h3>
+                                <div class="bg-white border border-gray-200 rounded-xl p-6">
+                                    <p id="event-impact" class="text-gray-700 whitespace-pre-line leading-relaxed"></p>
+                                </div>
+                            </section>
+                        </div>
+
+                        <!-- 오른쪽: 관련 정보 -->
+                        <div class="space-y-6">
+                            <!-- 중요도 -->
+                            <section class="bg-gray-50 rounded-xl p-6 border border-gray-200">
+                                <h3 class="text-lg font-bold text-gray-900 mb-4">중요도</h3>
+                                <div class="flex items-center gap-2">
+                                    <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                                        <div id="importance-bar" class="h-full bg-blue-600 rounded-full"
+                                            style="width: 0%"></div>
+                                    </div>
+                                    <span id="importance-text" class="font-bold text-blue-600"></span>
+                                </div>
+                            </section>
+
+                            <!-- 관련 캐릭터 -->
+                            <section class="bg-gray-50 rounded-xl p-6 border border-gray-200">
+                                <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-blue-600">group</span>
+                                    관련 캐릭터
+                                </h3>
+                                <div id="related-characters" class="space-y-3">
+                                    <!-- 캐릭터 아이템 -->
+                                    <p class="text-gray-500 text-sm text-center py-4">관련된 캐릭터가 없습니다.</p>
+                                </div>
+                            </section>
+
+                            <!-- 관련 장소 -->
+                            <section class="bg-gray-50 rounded-xl p-6 border border-gray-200">
+                                <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-blue-600">location_on</span>
+                                    장소
+                                </h3>
+                                <p id="event-location" class="text-gray-700 flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-gray-400">unknown_document</span>
+                                    정보 없음
+                                </p>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="./js/utils.js"></script>
+    <script src="./js/data-loader.js"></script>
+    <script src="./js/character-store.js"></script>
+    <script src="./js/event-form.js"></script>
+    <script>
+        let event = null;
+
+        // 이벤트 수정
+        function editEvent() {
+            const eventId = new URLSearchParams(window.location.search).get('id');
+            if (eventId) {
+                eventForm.showEditModal(eventId);
+            }
+        }
+
+        // 이벤트 삭제
+        function deleteEvent() {
+            const eventId = new URLSearchParams(window.location.search).get('id');
+            if (eventId) {
+                eventForm.showDeleteModal(eventId);
+            }
+        }
+
+        // 페이지 초기화
+        async function initEventDetail() {
+            try {
+                // URL에서 이벤트 ID 가져오기
+                const urlParams = new URLSearchParams(window.location.search);
+                const eventId = urlParams.get('id');
+
+                if (!eventId) {
+                    utils.showError('.max-w-5xl', '이벤트 ID가 없습니다.'); // Updated target
+                    return;
+                }
+
+                // 프로젝트 정보 로드
+                const project = await dataLoader.getActiveProject();
+                if (project) {
+                    document.getElementById('project-name').textContent = project.name;
+                    document.getElementById('project-genre').textContent = project.genre;
+                }
+
+                // 이벤트 데이터 로드
+                event = await eventStore.getEventById(eventId);
+
+                if (!event) {
+                    utils.showError('.max-w-5xl', '이벤트를 찾을 수 없습니다.'); // Updated target
+                    return;
+                }
+
+                // 이벤트 렌더링
+                renderEvent(event);
+            } catch (error) {
+                console.error('Error:', error);
+                utils.showError('.max-w-5xl', '데이터를 불러오는데 실패했습니다.'); // Updated target
+            }
+        }
+
+        // 이벤트 렌더링
+        function renderEvent(evt) {
+            // 이미지
+            const eventImage = document.getElementById('event-image');
+            eventImage.src = evt.image || `https://via.placeholder.com/1200x675?text=${encodeURIComponent(evt.title)}`;
+            eventImage.onerror = function () {
+                this.src = `https://via.placeholder.com/1200x675?text=${encodeURIComponent(evt.title)}`;
+            };
+
+            // 기본 정보
+            document.getElementById('event-title').textContent = evt.title;
+            document.getElementById('event-type').textContent = evt.type || '미분류';
+            document.querySelector('#event-date .date-text').textContent = evt.date || '날짜 미정';
+
+            // 상세 내용
+            document.getElementById('event-description').textContent = evt.description || '상세 내용이 없습니다.';
+
+            // 결과 및 영향
+            document.getElementById('event-impact').textContent = evt.impact || '이벤트의 결과 및 영향에 대한 정보가 없습니다.';
+
+            // 중요도
+            const importanceText = document.getElementById('importance-text');
+            const importanceBar = document.getElementById('importance-bar');
+            let importanceLevel = 0;
+            let importanceColorClass = 'bg-gray-400';
+
+            switch (evt.importance) {
+                case '낮음':
+                    importanceLevel = 33;
+                    importanceColorClass = 'bg-green-500';
+                    break;
+                case '중간':
+                    importanceLevel = 66;
+                    importanceColorClass = 'bg-yellow-500';
+                    break;
+                case '높음':
+                    importanceLevel = 100;
+                    importanceColorClass = 'bg-red-500';
+                    break;
+                default:
+                    importanceLevel = 0;
+                    importanceColorClass = 'bg-gray-400';
+                    break;
+            }
+            importanceText.textContent = evt.importance || '미정';
+            importanceBar.style.width = `${importanceLevel}%`;
+            importanceBar.className = `h-full ${importanceColorClass} rounded-full`;
+
+            // 관련 캐릭터 로드
+            loadRelatedCharacters(evt.relatedCharacters);
+
+            // 관련 장소 (데이터 구조에 따라 수정 필요)
+            const eventLocation = document.getElementById('event-location');
+            if (evt.location) {
+                eventLocation.innerHTML = `
+                    <span class="material-symbols-outlined text-green-600">location_on</span>
+                    ${evt.location}
+                `;
+            } else {
+                eventLocation.innerHTML = `
+                    <span class="material-symbols-outlined text-gray-400">unknown_document</span>
+                    정보 없음
+                `;
+            }
+        }
+
+        // 관련 캐릭터 로드 (ID를 이름으로 변환)
+        async function loadRelatedCharacters(characterIds) {
+            const container = document.getElementById('related-characters');
+
+            if (!characterIds || characterIds.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 text-sm text-center py-4">관련된 캐릭터가 없습니다.</p>';
+                return;
+            }
+
+            try {
+                // 각 캐릭터 ID에 대해 정보 조회
+                const characters = await Promise.all(
+                    characterIds.map(charId => characterStore.getCharacterById(charId))
+                );
+
+                // null 제거 (존재하지 않는 캐릭터)
+                const validCharacters = characters.filter(char => char !== null);
+
+                if (validCharacters.length > 0) {
+                    container.innerHTML = validCharacters.map(char => {
+                        const imageUrl = characterStore.getCharacterImageUrl(char) ||
+                            `https://ui-avatars.com/api/?name=${encodeURIComponent(char.name)}&background=random&size=80`;
+
+                        return `
+                            <a href="character_detail.html?id=${char.id}"
+                               class="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-200 hover:bg-blue-50 hover:border-blue-200 transition-colors">
+                                <img src="${imageUrl}" alt="${utils.escapeHtml(char.name)}"
+                                     class="w-10 h-10 rounded-full object-cover bg-gray-100"
+                                     onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(char.name)}&background=random&size=80'">
+                                <div class="flex-1 min-w-0">
+                                    <p class="font-medium text-gray-900 truncate">${utils.escapeHtml(char.name)}</p>
+                                    <p class="text-xs text-gray-500 truncate">${utils.escapeHtml(char.role || '역할 미정')}</p>
+                                </div>
+                            </a>
+                        `;
+                    }).join('');
+                } else {
+                    container.innerHTML = '<p class="text-gray-500 text-sm text-center py-4">관련된 캐릭터가 없습니다.</p>';
+                }
+            } catch (error) {
+                console.error('Error loading related characters:', error);
+                container.innerHTML = '<p class="text-red-500 text-sm text-center py-4">캐릭터 정보를 불러오는데 실패했습니다.</p>';
+            }
+        }
+
+        // 페이지 로드 시 초기화
+        document.addEventListener('DOMContentLoaded', () => {
+            utils.initUserProfile();
+            initEventDetail();
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>타임라인 - 웹소설 세계관 구축</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
+        rel="stylesheet">
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body class="bg-gray-50 font-sans">
+    <!-- 모바일 오버레이 -->
+    <div id="mobile-overlay" class="mobile-overlay" onclick="utils.toggleSidebar()"></div>
+
+    <!-- 모바일 메뉴 버튼 -->
+    <button class="mobile-menu-btn" onclick="utils.toggleSidebar()">
+        <span class="material-symbols-outlined">menu</span>
+    </button>
+
+    <!-- 사이드바 -->
+    <aside id="sidebar"
+        class="fixed left-0 top-0 h-screen w-64 bg-white border-r border-gray-200 flex flex-col glass-panel">
+        <div class="p-6 border-b border-gray-200">
+            <h2 id="project-name" class="text-xl font-bold text-gray-900">로딩 중...</h2>
+            <p id="project-genre" class="text-sm text-gray-500 mt-1">-</p>
+        </div>
+        <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+            <a href="index.html"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors">
+                <span class="material-symbols-outlined">dashboard</span>
+                <span>대시보드</span>
+            </a>
+            <a href="character_list.html"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors">
+                <span class="material-symbols-outlined">person</span>
+                <span>캐릭터</span>
+            </a>
+            <a href="character_graph.html"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors">
+                <span class="material-symbols-outlined">hub</span>
+                <span>관계도</span>
+            </a>
+            <a href="event_list.html"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors">
+                <span class="material-symbols-outlined">event</span>
+                <span>이벤트</span>
+            </a>
+            <a href="timeline.html"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg bg-blue-50 text-blue-600 font-medium transition-colors">
+                <span class="material-symbols-outlined">timeline</span>
+                <span>타임라인</span>
+            </a>
+            <a href="synopsis.html"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors">
+                <span class="material-symbols-outlined">auto_stories</span>
+                <span>시놉시스</span>
+            </a>
+            <a href="foreshadowing.html"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors">
+                <span class="material-symbols-outlined">help</span>
+                <span>복선/떡밥</span>
+            </a>
+        </nav>
+
+        <!-- 사용자 프로필 -->
+        <div class="p-4 border-t border-gray-200">
+            <div class="flex items-center gap-3">
+                <img id="user-avatar" src="https://ui-avatars.com/api/?name=User&background=4285F4&color=fff"
+                    class="w-10 h-10 rounded-full" alt="프로필">
+                <div class="flex-1 min-w-0">
+                    <p id="user-name" class="text-sm font-medium text-gray-900 truncate"></p>
+                    <p id="user-role" class="text-xs text-gray-500 truncate"></p>
+                </div>
+                <button class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+                    <span class="material-symbols-outlined text-lg">settings</span>
+                </button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- 메인 컨텐츠 -->
+    <main class="ml-64 p-8 transition-all duration-300">
+        <div class="max-w-4xl mx-auto animate-fade-in">
+            <!-- 헤더 -->
+            <header class="mb-8 flex justify-between items-center">
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-900 mb-2">타임라인</h1>
+                    <p class="text-gray-600">사건의 흐름을 연대기순으로 확인하세요</p>
+                </div>
+                <button id="add-timeline-event-btn"
+                    class="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-sm hover:shadow">
+                    <span class="material-symbols-outlined">add</span>
+                    <span>새 이벤트 추가</span>
+                </button>
+            </header>
+
+            <!-- 필터 및 검색 -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-8 glass-panel sticky top-4 z-20">
+                <div class="flex flex-col md:flex-row gap-4 items-center justify-between">
+                    <div class="flex gap-2 overflow-x-auto pb-2 md:pb-0 w-full md:w-auto">
+                        <button onclick="filterTimeline('all')" id="filter-all"
+                            class="px-4 py-2 rounded-full bg-blue-100 text-blue-700 font-medium whitespace-nowrap transition-colors">전체</button>
+                        <button onclick="filterTimeline('main')" id="filter-main"
+                            class="px-4 py-2 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200 whitespace-nowrap transition-colors">메인</button>
+                        <button onclick="filterTimeline('sub')" id="filter-sub"
+                            class="px-4 py-2 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200 whitespace-nowrap transition-colors">서브</button>
+                        <button onclick="filterTimeline('background')" id="filter-background"
+                            class="px-4 py-2 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200 whitespace-nowrap transition-colors">배경</button>
+                        <div class="w-px bg-gray-300 mx-1"></div>
+                        <button onclick="toggleSortMode()" id="sort-toggle-btn"
+                            class="px-4 py-2 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200 whitespace-nowrap transition-colors flex items-center gap-1">
+                            <span class="material-symbols-outlined text-sm">swap_vert</span>
+                            <span id="sort-mode-text">사용자 순서</span>
+                        </button>
+                    </div>
+                    <div class="relative w-full md:w-64">
+                        <span
+                            class="material-symbols-outlined absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">search</span>
+                        <input type="text" id="search-input" placeholder="이벤트 검색..."
+                            class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 타임라인 컨테이너 -->
+            <div id="timeline-container" class="relative pl-4 animate-slide-up">
+                <!-- 로딩 상태 -->
+                <div class="flex items-center justify-center py-12">
+                    <div class="text-center">
+                        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+                        <p class="text-gray-600">타임라인 로딩 중...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="./js/utils.js"></script>
+    <script src="./js/data-loader.js"></script>
+    <script src="./js/event-form.js"></script>
+    <script>
+        let allTimelineEvents = [];
+        let filteredTimelineEvents = [];
+        let currentFilter = 'all';
+        let currentProjectId = null;
+        let currentSortMode = 'custom'; // 'custom' | 'chronological'
+
+        // 색상 및 아이콘 매핑
+        const typeStyles = {
+            '주요사건': { bgColor: 'bg-orange-100', borderColor: 'border-orange-300', textColor: 'text-orange-600', icon: 'bolt' },
+            '캐릭터': { bgColor: 'bg-purple-100', borderColor: 'border-purple-300', textColor: 'text-purple-600', icon: 'person' },
+            '세계관': { bgColor: 'bg-teal-100', borderColor: 'border-teal-300', textColor: 'text-teal-600', icon: 'public' },
+            '전투': { bgColor: 'bg-red-100', borderColor: 'border-red-300', textColor: 'text-red-600', icon: 'swords' },
+            '발견': { bgColor: 'bg-green-100', borderColor: 'border-green-300', textColor: 'text-green-600', icon: 'diamond' },
+            'default': { bgColor: 'bg-gray-100', borderColor: 'border-gray-300', textColor: 'text-gray-600', icon: 'event' }
+        };
+
+        // 페이지 초기화
+        async function initTimeline() {
+            try {
+                const project = await dataLoader.getActiveProject();
+
+                if (project) {
+                    currentProjectId = project.id;
+                    document.getElementById('project-name').textContent = project.name;
+                    document.getElementById('project-genre').textContent = project.genre;
+
+                    allTimelineEvents = await timelineStore.getTimeline(project.id);
+                    // 기본값: 사용자 순서 (localStorage에 저장된 순서 유지)
+                    console.log('[Timeline] Loaded events:', allTimelineEvents.map(e => e.id));
+                    console.log('[Timeline] Saved order:', utils.storage.get('stitch_timeline_order', {}));
+                    filteredTimelineEvents = [...allTimelineEvents];
+                    renderTimeline(filteredTimelineEvents);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                utils.showError('#timeline-container', '데이터를 불러오는데 실패했습니다.');
+            }
+        }
+
+        // 타임라인 렌더링
+        function renderTimeline(events) {
+            const container = document.getElementById('timeline-container');
+
+            if (events.length === 0) {
+                utils.showEmpty(container, '검색 결과가 없습니다.', 'timeline');
+                return;
+            }
+
+            // 타임라인 그리드 생성
+            const timelineHtml = events.map((event, index) => {
+                const isLast = index === events.length - 1;
+                const style = typeStyles[event.type] || typeStyles.default;
+                const isHighlighted = event.highlighted || false;
+
+                // 강조된 이벤트인 경우 특별한 스타일
+                const highlightClass = isHighlighted
+                    ? `ring-4 ring-blue-300 ${style.borderColor} border-2`
+                    : `${style.borderColor} border-2`;
+                const descriptionBg = isHighlighted
+                    ? 'bg-blue-50 rounded-xl -ml-4 pl-4'
+                    : '';
+
+                return `
+                    <div class="timeline-item grid grid-cols-[auto_1fr] gap-x-4 group" draggable="true" data-id="${event.id}">
+                        <!-- 아이콘 및 라인 -->
+                        <div class="flex flex-col items-center gap-1 relative">
+                            <!-- 드래그 핸들 (호버 시 표시) -->
+                            <div class="absolute -left-8 top-2 opacity-0 group-hover:opacity-100 cursor-grab p-1 text-gray-400 hover:text-gray-600 transition-opacity">
+                                <span class="material-symbols-outlined">drag_indicator</span>
+                            </div>
+
+                            ${index > 0 ? '<div class="w-0.5 h-full bg-gray-300"></div>' : ''}
+                            <div class="flex h-10 w-10 items-center justify-center rounded-full ${style.bgColor} ${highlightClass} z-10 bg-white">
+                                <span class="material-symbols-outlined ${style.textColor}">${style.icon}</span>
+                            </div>
+                            ${!isLast ? '<div class="w-0.5 grow bg-gray-300"></div>' : ''}
+                        </div>
+
+                        <!-- 이벤트 내용 -->
+                        <div class="flex flex-1 flex-col pb-8 pt-2 ${descriptionBg}">
+                            <p class="text-gray-500 text-sm">${event.year} ${event.season || ''}</p>
+                            <p class="text-gray-900 text-lg font-bold ${isHighlighted ? 'text-blue-600' : ''}">${event.title}</p>
+                            <p class="text-gray-600 text-base mt-1">${event.description}</p>
+                            ${event.eventId ? `
+                                <a href="event_detail.html?id=${event.eventId}" class="text-blue-600 hover:text-blue-700 text-sm mt-2 inline-block">
+                                    자세히 보기 →
+                                </a>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = timelineHtml;
+
+            // 드래그 앤 드롭 이벤트 리스너 연결
+            addDragListeners();
+        }
+
+        // 드래그 앤 드롭 관련 변수
+        let draggedItem = null;
+        let placeholder = null;
+
+        function addDragListeners() {
+            const items = document.querySelectorAll('.timeline-item');
+            const container = document.getElementById('timeline-container');
+
+            // 컨테이너에 dragover와 drop 이벤트 등록
+            container.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'move';
+            });
+
+            container.addEventListener('drop', (e) => {
+                e.preventDefault();
+                if (placeholder && draggedItem) {
+                    placeholder.replaceWith(draggedItem);
+                    console.log('[Timeline] Drop completed, item moved');
+                }
+            });
+
+            items.forEach(item => {
+                item.addEventListener('dragstart', (e) => {
+                    draggedItem = item;
+                    e.dataTransfer.effectAllowed = 'move';
+                    e.dataTransfer.setData('text/plain', item.dataset.id);
+
+                    // 드래그 중인 아이템 스타일
+                    setTimeout(() => {
+                        item.classList.add('opacity-50');
+                    }, 0);
+                });
+
+                item.addEventListener('dragend', () => {
+                    const movedItem = draggedItem;
+                    draggedItem = null;
+                    if (movedItem) {
+                        movedItem.classList.remove('opacity-50');
+                    }
+
+                    // 플레이스홀더 제거
+                    if (placeholder && placeholder.parentNode) {
+                        placeholder.parentNode.removeChild(placeholder);
+                    }
+                    placeholder = null;
+
+                    // 순서 저장
+                    saveTimelineOrder();
+                });
+
+                item.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    if (item === draggedItem) return;
+
+                    const bounding = item.getBoundingClientRect();
+                    const offset = bounding.y + (bounding.height / 2);
+
+                    // 플레이스홀더 생성 (없으면)
+                    if (!placeholder) {
+                        placeholder = document.createElement('div');
+                        placeholder.className = 'h-20 bg-blue-50 border-2 border-dashed border-blue-300 rounded-lg mb-8 mx-4';
+                    }
+
+                    if (e.clientY - offset > 0) {
+                        item.after(placeholder);
+                    } else {
+                        item.before(placeholder);
+                    }
+                });
+            });
+        }
+
+        // 순서 저장
+        async function saveTimelineOrder() {
+            const container = document.getElementById('timeline-container');
+            const items = container.querySelectorAll('.timeline-item');
+            const newOrderIds = Array.from(items).map(item => item.dataset.id);
+
+            console.log('[Timeline] Saving order:', newOrderIds);
+
+            const project = await dataLoader.getActiveProject();
+            if (project) {
+                timelineStore.saveOrder(project.id, newOrderIds);
+                console.log('[Timeline] Order saved for project:', project.id);
+                utils.showToast('타임라인 순서가 저장되었습니다', 'success');
+            }
+        }
+
+        // 정렬 모드 토글
+        async function toggleSortMode() {
+            if (currentSortMode === 'custom') {
+                currentSortMode = 'chronological';
+                // 연도순 정렬 적용
+                sortByChronological();
+            } else {
+                currentSortMode = 'custom';
+                // 저장된 순서 복원
+                await applyCustomOrder();
+            }
+            updateSortButtonUI();
+            renderTimeline(filteredTimelineEvents);
+        }
+
+        // 연도 문자열에서 숫자 추출 ("왕국력 100년" -> 100)
+        function parseYear(yearStr) {
+            if (typeof yearStr === 'number') return yearStr;
+            const match = String(yearStr).match(/(\d+)/);
+            return match ? parseInt(match[1], 10) : 0;
+        }
+
+        // 연도순 정렬
+        function sortByChronological() {
+            filteredTimelineEvents.sort((a, b) => {
+                const yearA = parseYear(a.year);
+                const yearB = parseYear(b.year);
+                return yearA - yearB;
+            });
+        }
+
+        // 정렬 버튼 UI 업데이트
+        function updateSortButtonUI() {
+            const btn = document.getElementById('sort-toggle-btn');
+            const text = document.getElementById('sort-mode-text');
+            if (currentSortMode === 'chronological') {
+                btn.classList.remove('bg-gray-100', 'text-gray-700');
+                btn.classList.add('bg-blue-100', 'text-blue-700');
+                text.textContent = '연도순';
+            } else {
+                btn.classList.remove('bg-blue-100', 'text-blue-700');
+                btn.classList.add('bg-gray-100', 'text-gray-700');
+                text.textContent = '사용자 순서';
+            }
+        }
+
+        // 사용자 순서 적용
+        async function applyCustomOrder() {
+            allTimelineEvents = await timelineStore.getTimeline(currentProjectId);
+            filteredTimelineEvents = applyCurrentFilter(allTimelineEvents);
+        }
+
+        // 현재 필터 적용
+        function applyCurrentFilter(events) {
+            if (currentFilter === 'all') {
+                return [...events];
+            }
+            return events.filter(event => event.type === currentFilter);
+        }
+
+        // 필터링
+        function filterTimeline(type) {
+            currentFilter = type;
+
+            // 필터 버튼 스타일 업데이트
+            document.querySelectorAll('[id^="filter-"]').forEach(btn => {
+                btn.className = 'px-4 py-2 rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300 whitespace-nowrap';
+            });
+            document.getElementById(`filter-${type}`).className = 'px-4 py-2 rounded-full bg-blue-100 text-blue-700 font-medium whitespace-nowrap';
+
+            // 필터 적용
+            filteredTimelineEvents = applyCurrentFilter(allTimelineEvents);
+
+            // 현재 정렬 모드 적용
+            if (currentSortMode === 'chronological') {
+                sortByChronological();
+            }
+
+            renderTimeline(filteredTimelineEvents);
+        }
+
+        // 검색 기능
+        document.addEventListener('DOMContentLoaded', () => {
+            utils.initUserProfile();
+            initTimeline();
+
+            const searchInput = document.getElementById('search-input');
+            searchInput.addEventListener('input', utils.debounce((e) => {
+                const query = e.target.value;
+                const baseEvents = currentFilter === 'all'
+                    ? allTimelineEvents
+                    : allTimelineEvents.filter(event => event.type === currentFilter);
+
+                filteredTimelineEvents = utils.searchArray(baseEvents, query, ['title', 'description', 'year']);
+                renderTimeline(filteredTimelineEvents);
+            }, 300));
+
+            // 새 이벤트 추가 버튼
+            document.getElementById('add-timeline-event-btn').addEventListener('click', () => {
+                if (currentProjectId) {
+                    eventForm.showCreateModal(currentProjectId);
+                } else {
+                    utils.showToast('프로젝트를 먼저 선택해주세요.', 'error');
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

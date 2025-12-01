@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>복선/떡밥 관리 - 웹소설 세계관 구축</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
+        rel="stylesheet">
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body class="bg-gray-50 font-sans">
+    <!-- 모바일 오버레이 -->
+    <div id="mobile-overlay" class="mobile-overlay" onclick="utils.toggleSidebar()"></div>
+
+    <!-- 모바일 메뉴 버튼 -->
+    <button class="mobile-menu-btn" onclick="utils.toggleSidebar()">
+        <span class="material-symbols-outlined">menu</span>
+    </button>
+
+    <!-- 사이드바 -->
+    <aside id="sidebar"
+        class="fixed left-0 top-0 h-screen w-64 bg-white border-r border-gray-200 flex flex-col glass-panel">
+        <div class="p-6 border-b border-gray-200">
+            <h2 id="project-name" class="text-xl font-bold text-gray-900">로딩 중...</h2>
+            <p id="project-genre" class="text-sm text-gray-500 mt-1">-</p>
+        </div>
+        <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+            <a href="index.html"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors">
+                <span class="material-symbols-outlined">dashboard</span>
+                <span>대시보드</span>
+            </a>
+            <a href="character_list.html"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors">
+                <span class="material-symbols-outlined">person</span>
+                <span>캐릭터</span>
+            </a>
+            <a href="character_graph.html"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors">
+                <span class="material-symbols-outlined">hub</span>
+                <span>관계도</span>
+            </a>
+            <a href="event_list.html"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors">
+                <span class="material-symbols-outlined">event</span>
+                <span>이벤트</span>
+            </a>
+            <a href="timeline.html"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors">
+                <span class="material-symbols-outlined">timeline</span>
+                <span>타임라인</span>
+            </a>
+            <a href="synopsis.html"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors">
+                <span class="material-symbols-outlined">auto_stories</span>
+                <span>시놉시스</span>
+            </a>
+            <a href="foreshadowing.html"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg bg-blue-50 text-blue-600 font-medium transition-colors">
+                <span class="material-symbols-outlined">help</span>
+                <span>복선/떡밥</span>
+            </a>
+        </nav>
+
+        <!-- 사용자 프로필 -->
+        <div class="p-4 border-t border-gray-200">
+            <div class="flex items-center gap-3">
+                <img id="user-avatar" src="https://ui-avatars.com/api/?name=User&background=4285F4&color=fff"
+                    class="w-10 h-10 rounded-full" alt="프로필">
+                <div class="flex-1 min-w-0">
+                    <p id="user-name" class="text-sm font-medium text-gray-900 truncate"></p>
+                    <p id="user-role" class="text-xs text-gray-500 truncate"></p>
+                </div>
+                <button class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+                    <span class="material-symbols-outlined text-lg">settings</span>
+                </button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- 메인 컨텐츠 -->
+    <main class="ml-64 p-8 transition-all duration-300">
+        <div class="max-w-7xl mx-auto animate-fade-in">
+            <!-- 헤더 -->
+            <header class="mb-8 flex justify-between items-center">
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-900 mb-2">복선 및 떡밥 관리</h1>
+                    <p class="text-gray-600">작품 속 미해결 요소들을 추적하고 관리하세요</p>
+                </div>
+                <button id="add-foreshadowing-btn"
+                    class="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-sm hover:shadow">
+                    <span class="material-symbols-outlined">add</span>
+                    <span>새 복선 추가</span>
+                </button>
+            </header>
+
+            <!-- 통계 카드 -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 card-hover">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-600">전체 복선</p>
+                            <p id="stat-total" class="text-3xl font-bold text-gray-900 mt-2">-</p>
+                        </div>
+                        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                            <span class="material-symbols-outlined text-blue-600 text-2xl">help</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 card-hover">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-600">미회수</p>
+                            <p id="stat-unresolved" class="text-3xl font-bold text-red-600 mt-2">-</p>
+                        </div>
+                        <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+                            <span class="material-symbols-outlined text-red-600 text-2xl">warning</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 card-hover">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-600">회수 완료</p>
+                            <p id="stat-resolved" class="text-3xl font-bold text-green-600 mt-2">-</p>
+                        </div>
+                        <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                            <span class="material-symbols-outlined text-green-600 text-2xl">check_circle</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 검색 및 필터 -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6 glass-panel">
+                <div class="flex flex-col md:flex-row gap-4">
+                    <div class="flex-1 relative">
+                        <span
+                            class="material-symbols-outlined absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">search</span>
+                        <input type="text" id="search-input" placeholder="내용, 관련 캐릭터 검색..."
+                            class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </div>
+                    <div class="flex gap-2">
+                        <select id="status-filter"
+                            class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option value="">모든 상태</option>
+                            <option value="미회수">미회수</option>
+                            <option value="회수완료">회수완료</option>
+                            <option value="폐기">폐기</option>
+                        </select>
+                        <select id="importance-filter"
+                            class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option value="">모든 중요도</option>
+                            <option value="상">상</option>
+                            <option value="중">중</option>
+                            <option value="하">하</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 복선 목록 -->
+            <div id="foreshadowing-list" class="space-y-4 animate-slide-up">
+                <!-- 로딩 상태 -->
+                <div class="flex items-center justify-center py-12">
+                    <div class="text-center">
+                        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+                        <p class="text-gray-600">데이터 로딩 중...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <!-- Scripts -->
+    <script src="./js/utils.js"></script>
+    <script src="./js/data-loader.js"></script>
+    <script src="./js/foreshadowing-form.js"></script>
+    <script>
+        let allForeshadowing = [];
+        let filteredForeshadowing = [];
+        let foreshadowingTypes = [];
+        let statusTypes = [];
+        let characters = [];
+        let events = [];
+        let currentProjectId = null;
+
+        // 페이지 초기화
+        async function initForeshadowing() {
+            try {
+                const project = await dataLoader.getActiveProject();
+
+                if (project) {
+                    currentProjectId = project.id;
+                    document.getElementById('project-name').textContent = project.name;
+                    document.getElementById('project-genre').textContent = project.genre;
+
+                    // 데이터 로드 (foreshadowingStore 사용)
+                    [allForeshadowing, foreshadowingTypes, statusTypes, characters, events] = await Promise.all([
+                        foreshadowingStore.getMergedForeshadowing(project.id),
+                        dataLoader.getForeshadowingTypes(),
+                        dataLoader.getForeshadowingStatusTypes(),
+                        dataLoader.getCharacters(project.id),
+                        dataLoader.getEvents(project.id)
+                    ]);
+
+                    // 통계 업데이트
+                    updateStats();
+
+                    // 초기 렌더링
+                    filteredForeshadowing = allForeshadowing;
+                    renderForeshadowing();
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('foreshadowing-list').innerHTML = `
+                    <div class="text-center py-12 text-red-500">
+                        <span class="material-symbols-outlined text-4xl mb-2">error</span>
+                        <p>데이터를 불러오는데 실패했습니다.</p>
+                    </div>
+                `;
+            }
+        }
+
+        // 통계 업데이트
+        function updateStats() {
+            const stats = {
+                total: allForeshadowing.length,
+                pending: allForeshadowing.filter(f => f.status === '미회수').length,
+                resolved: allForeshadowing.filter(f => f.status === '회수완료').length,
+                discarded: allForeshadowing.filter(f => f.status === '폐기').length
+            };
+
+            document.getElementById('stat-total').textContent = stats.total;
+            document.getElementById('stat-unresolved').textContent = stats.pending;
+            document.getElementById('stat-resolved').textContent = stats.resolved;
+        }
+
+        // 필터 적용
+        function applyFilters() {
+            const searchQuery = document.getElementById('search-input').value.toLowerCase();
+            const statusFilter = document.getElementById('status-filter').value;
+            const importanceFilter = document.getElementById('importance-filter').value;
+
+            filteredForeshadowing = allForeshadowing.filter(fore => {
+                // 검색어 필터
+                const matchesSearch = !searchQuery ||
+                    fore.title.toLowerCase().includes(searchQuery) ||
+                    fore.description.toLowerCase().includes(searchQuery) ||
+                    (fore.keywords || []).some(k => k.toLowerCase().includes(searchQuery));
+
+                // 상태 필터
+                const matchesStatus = !statusFilter || fore.status === statusFilter;
+
+                // 중요도 필터
+                const matchesImportance = !importanceFilter || fore.importance === importanceFilter;
+
+                return matchesSearch && matchesStatus && matchesImportance;
+            });
+
+            renderForeshadowing();
+        }
+
+        // 복선 렌더링
+        function renderForeshadowing() {
+            const container = document.getElementById('foreshadowing-list');
+
+            if (filteredForeshadowing.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-12 text-gray-500">
+                        <span class="material-symbols-outlined text-4xl mb-2">search_off</span>
+                        <p>조건에 맞는 복선/떡밥이 없습니다.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = filteredForeshadowing.map(fore => {
+                const typeInfo = foreshadowingTypes.find(t => t.type === fore.type) || {};
+                const statusInfo = statusTypes.find(s => s.status === fore.status) || {};
+                const relatedChars = fore.relatedCharacters?.map(id => characters.find(c => c.id === id)?.name).filter(Boolean) || [];
+                const relatedEvts = fore.relatedEvents?.map(id => events.find(e => e.id === id)?.title).filter(Boolean) || [];
+
+                return `
+                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
+                        <div class="flex items-start justify-between gap-4">
+                            <div class="flex-1">
+                                <div class="flex items-center gap-2 mb-2">
+                                    <span class="material-symbols-outlined" style="color: ${typeInfo.color || '#6B7280'}">${typeInfo.icon || 'help'}</span>
+                                    <h3 class="text-lg font-semibold text-gray-900">${fore.title}</h3>
+                                </div>
+                                <p class="text-gray-600 mb-3">${fore.description}</p>
+
+                                <!-- 설치 정보 -->
+                                <div class="bg-gray-50 rounded-lg p-3 mb-3">
+                                    <p class="text-sm text-gray-700">
+                                        <span class="font-medium">설치:</span>
+                                        ${fore.plantedAt?.episode ? `${fore.plantedAt.episode}화` : '-'}
+                                        ${fore.plantedAt?.scene ? ` - "${fore.plantedAt.scene}"` : ''}
+                                    </p>
+                                    ${fore.plantedAt?.hint ? `
+                                        <p class="text-sm text-gray-500 mt-1 italic">"${fore.plantedAt.hint}"</p>
+                                    ` : ''}
+                                </div>
+
+                                <!-- 회수 정보 (회수완료인 경우) -->
+                                ${fore.status === '회수완료' && fore.resolvedAt ? `
+                                    <div class="bg-green-50 rounded-lg p-3 mb-3">
+                                        <p class="text-sm text-green-700">
+                                            <span class="font-medium">회수:</span>
+                                            ${fore.resolvedAt.episode ? `${fore.resolvedAt.episode}화` : '-'}
+                                            ${fore.resolvedAt.scene ? ` - "${fore.resolvedAt.scene}"` : ''}
+                                        </p>
+                                        ${fore.resolvedAt.resolution ? `
+                                            <p class="text-sm text-green-600 mt-1">${fore.resolvedAt.resolution}</p>
+                                        ` : ''}
+                                    </div>
+                                ` : ''}
+
+                                <!-- 관련 캐릭터/이벤트 -->
+                                <div class="flex flex-wrap gap-2 mb-3">
+                                    ${relatedChars.map(name => `
+                                        <span class="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full">${name}</span>
+                                    `).join('')}
+                                    ${relatedEvts.map(title => `
+                                        <span class="px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded-full">${title}</span>
+                                    `).join('')}
+                                </div>
+
+                                <!-- 키워드 -->
+                                ${fore.keywords?.length ? `
+                                    <div class="flex flex-wrap gap-1">
+                                        ${fore.keywords.map(k => `<span class="text-xs text-gray-500">${k}</span>`).join('')}
+                                    </div>
+                                ` : ''}
+
+                                <!-- 메모 -->
+                                ${fore.notes ? `
+                                    <p class="text-sm text-gray-500 mt-2 italic border-l-2 border-gray-300 pl-2">${fore.notes}</p>
+                                ` : ''}
+                            </div>
+
+                            <!-- 상태, 중요도 배지 및 액션 버튼 -->
+                            <div class="flex flex-col items-end gap-2">
+                                <span class="px-3 py-1 text-sm rounded-full text-white" style="background-color: ${statusInfo.color || '#6B7280'}">
+                                    ${fore.status}
+                                </span>
+                                <span class="px-3 py-1 text-sm rounded-full text-white" style="background-color: ${typeInfo.color || '#6B7280'}">
+                                    ${fore.type}
+                                </span>
+                                <span class="px-2 py-1 text-xs rounded ${getImportanceBadgeClass(fore.importance)}">
+                                    중요도: ${fore.importance}
+                                </span>
+                                <!-- 액션 버튼 -->
+                                <div class="flex gap-1 mt-2">
+                                    <button onclick="foreshadowingForm.showEditModal('${fore.id}')"
+                                        class="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors"
+                                        title="수정">
+                                        <span class="material-symbols-outlined text-lg">edit</span>
+                                    </button>
+                                    <button onclick="foreshadowingForm.showDeleteModal('${fore.id}')"
+                                        class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
+                                        title="삭제">
+                                        <span class="material-symbols-outlined text-lg">delete</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // 중요도별 배지 클래스
+        function getImportanceBadgeClass(importance) {
+            switch (importance) {
+                case '상': return 'bg-red-100 text-red-700';
+                case '중': return 'bg-yellow-100 text-yellow-700';
+                case '하': return 'bg-gray-100 text-gray-600';
+                default: return 'bg-gray-100 text-gray-600';
+            }
+        }
+
+        // 페이지 로드 시 초기화
+        document.addEventListener('DOMContentLoaded', () => {
+            utils.initUserProfile();
+            initForeshadowing();
+
+            // 검색 입력 이벤트 (디바운스 적용)
+            document.getElementById('search-input').addEventListener('input',
+                utils.debounce(applyFilters, 300)
+            );
+
+            // 상태 필터 드롭다운 이벤트
+            document.getElementById('status-filter').addEventListener('change', applyFilters);
+
+            // 중요도 필터 드롭다운 이벤트
+            document.getElementById('importance-filter').addEventListener('change', applyFilters);
+
+            // 새 복선 추가 버튼 이벤트
+            document.getElementById('add-foreshadowing-btn').addEventListener('click', () => {
+                if (currentProjectId) {
+                    foreshadowingForm.showCreateModal(currentProjectId);
+                } else {
+                    utils.showToast('프로젝트를 먼저 선택해주세요.', 'error');
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

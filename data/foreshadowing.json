@@ -1,0 +1,125 @@
+{
+  "foreshadowing": [
+    {
+      "id": "fore_001",
+      "projectId": "proj_001",
+      "title": "카이안의 숨겨진 동기",
+      "type": "떡밥",
+      "status": "미회수",
+      "importance": "상",
+      "description": "카이안이 배신한 진짜 이유가 있다. 그의 눈에 서린 고통은 단순한 악역의 것이 아니다.",
+      "plantedAt": {
+        "episode": 3,
+        "scene": "카이안과의 첫 대면",
+        "hint": "카이안의 눈에 서린 고통, '네가 모르는 것이 있어'"
+      },
+      "resolvedAt": null,
+      "relatedCharacters": ["char_003", "char_001"],
+      "relatedEvents": ["event_005"],
+      "keywords": ["#배신", "#비밀", "#과거"],
+      "notes": "마지막 권에서 회수 예정. 카이안이 이로운의 부모를 살리기 위해 거래했다는 진실.",
+      "createdAt": "2024-01-20T00:00:00Z"
+    },
+    {
+      "id": "fore_002",
+      "projectId": "proj_001",
+      "title": "검은 용의 예언",
+      "type": "복선",
+      "status": "회수완료",
+      "importance": "상",
+      "description": "고대 예언서에 기록된 검은 용의 부활과 빛의 왕자에 대한 예언.",
+      "plantedAt": {
+        "episode": 1,
+        "scene": "프롤로그",
+        "hint": "'어둠이 깨어날 때, 빛의 후예가 일어서리라'"
+      },
+      "resolvedAt": {
+        "episode": 45,
+        "scene": "검은 용과의 결전",
+        "resolution": "이로운이 왕가의 검술로 검은 용을 봉인"
+      },
+      "relatedCharacters": ["char_001"],
+      "relatedEvents": ["event_002"],
+      "keywords": ["#예언", "#운명", "#각성"],
+      "notes": "중반부 클라이맥스에서 회수 완료",
+      "createdAt": "2024-01-20T00:00:00Z"
+    },
+    {
+      "id": "fore_003",
+      "projectId": "proj_001",
+      "title": "아리아의 수명",
+      "type": "설정",
+      "status": "미회수",
+      "importance": "중",
+      "description": "엘프인 아리아는 150년을 살았지만, 인간과의 여정은 그녀에게 어떤 의미인가.",
+      "plantedAt": {
+        "episode": 8,
+        "scene": "아리아의 과거 회상",
+        "hint": "'150년을 살았지만, 이렇게 마음이 움직인 건 처음이야'"
+      },
+      "resolvedAt": null,
+      "relatedCharacters": ["char_002", "char_001"],
+      "relatedEvents": ["event_004"],
+      "keywords": ["#수명", "#엘프", "#감정"],
+      "notes": "엔딩 또는 후일담에서 다룰 예정",
+      "createdAt": "2024-01-20T00:00:00Z"
+    },
+    {
+      "id": "fore_004",
+      "projectId": "proj_001",
+      "title": "아렌의 의심",
+      "type": "떡밥",
+      "status": "미회수",
+      "importance": "중",
+      "description": "아렌은 자신이 섬기는 제국에 의문을 품기 시작했다.",
+      "plantedAt": {
+        "episode": 15,
+        "scene": "검은 숲 조약 진상 조사",
+        "hint": "'이 명령은... 정말 정의로운 것인가?'"
+      },
+      "resolvedAt": null,
+      "relatedCharacters": ["char_005", "char_003"],
+      "relatedEvents": ["event_003"],
+      "keywords": ["#의심", "#정의", "#전환"],
+      "notes": "아렌이 이로운 진영으로 넘어오는 계기가 될 예정",
+      "createdAt": "2024-01-20T00:00:00Z"
+    }
+  ],
+  "foreshadowingTypes": [
+    {
+      "type": "떡밥",
+      "color": "#F59E0B",
+      "icon": "help",
+      "description": "독자의 궁금증을 유발하는 요소"
+    },
+    {
+      "type": "복선",
+      "color": "#8B5CF6",
+      "icon": "timeline",
+      "description": "미래 전개를 암시하는 요소"
+    },
+    {
+      "type": "설정",
+      "color": "#3B82F6",
+      "icon": "auto_stories",
+      "description": "세계관/캐릭터 핵심 설정"
+    }
+  ],
+  "statusTypes": [
+    {
+      "status": "미회수",
+      "color": "#EF4444",
+      "icon": "pending"
+    },
+    {
+      "status": "회수완료",
+      "color": "#22C55E",
+      "icon": "check_circle"
+    },
+    {
+      "status": "폐기",
+      "color": "#6B7280",
+      "icon": "cancel"
+    }
+  ]
+}

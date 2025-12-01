@@ -1,0 +1,320 @@
+{
+  "templates": [
+    {
+      "id": "tmpl_001",
+      "projectId": "proj_001",
+      "name": "복수극 기본 구조",
+      "genre": "판타지",
+      "structure": "3막 구조",
+      "description": "복수와 재건을 주제로 한 전통적인 서사 구조",
+      "requiredElements": {
+        "protagonistCount": 1,
+        "antagonistCount": 1,
+        "minEvents": 2
+      },
+      "template": "{{protagonist}}은(는) {{antagonist}}에게 빼앗긴 모든 것을 되찾기 위해 여정을 시작한다. {{event1}}을(를) 계기로 {{protagonist}}은(는) 자신의 진정한 힘을 깨닫고, {{allies}}와(과) 함께 {{antagonist}}에 맞서게 된다. 최종 결전에서 {{protagonist}}은(는) {{climax_event}}를 통해 승리를 거두고, 새로운 시대를 열어간다.",
+      "variables": {
+        "protagonist": "주인공 이름",
+        "antagonist": "적대자 이름",
+        "allies": "동료들",
+        "event1": "각성 계기 이벤트",
+        "climax_event": "클라이맥스 이벤트"
+      },
+      "createdAt": "2024-01-15T00:00:00Z"
+    },
+    {
+      "id": "tmpl_002",
+      "projectId": "proj_001",
+      "name": "성장 서사 구조",
+      "genre": "판타지",
+      "structure": "영웅의 여정",
+      "description": "주인공의 내적 성장을 중심으로 한 영웅 서사",
+      "requiredElements": {
+        "protagonistCount": 1,
+        "mentorRequired": true,
+        "minEvents": 2
+      },
+      "template": "평범한 일상을 살던 {{protagonist}}은(는) {{inciting_incident}}로 인해 운명의 전환점을 맞이한다. {{mentor}}의 가르침 아래 {{skill}}을(를) 익히며 성장하고, {{trial_event}}를 통해 시련을 극복한다. 마침내 {{protagonist}}은(는) 진정한 영웅으로 거듭나 {{final_goal}}을(를) 달성한다.",
+      "variables": {
+        "protagonist": "주인공 이름",
+        "inciting_incident": "일상 파괴 계기",
+        "mentor": "스승/조력자",
+        "skill": "습득 기술",
+        "trial_event": "시련 이벤트",
+        "final_goal": "최종 목표"
+      },
+      "createdAt": "2024-01-15T00:00:00Z"
+    },
+    {
+      "id": "tmpl_003",
+      "projectId": "proj_001",
+      "name": "로맨스 판타지 구조",
+      "genre": "로맨스판타지",
+      "structure": "로맨스 비트",
+      "description": "판타지 세계관에서 펼쳐지는 로맨스 서사",
+      "requiredElements": {
+        "protagonistCount": 1,
+        "loveInterestRequired": true,
+        "minEvents": 1
+      },
+      "template": "{{protagonist}}은(는) {{setting}}에서 {{love_interest}}와(과) 운명적인 만남을 가진다. 처음에는 {{initial_conflict}}로 갈등하지만, {{bonding_event}}를 계기로 서로에게 끌리게 된다. {{external_threat}}이(가) 두 사람의 관계를 위협하지만, 진심을 확인한 {{protagonist}}과(와) {{love_interest}}은(는) 함께 역경을 이겨내고 행복을 찾는다.",
+      "variables": {
+        "protagonist": "주인공 이름",
+        "setting": "배경",
+        "love_interest": "로맨스 상대",
+        "initial_conflict": "초기 갈등",
+        "bonding_event": "관계 발전 계기",
+        "external_threat": "외부 위협"
+      },
+      "createdAt": "2024-01-15T00:00:00Z"
+    }
+  ],
+  "extendedTemplates": [
+    {
+      "id": "ext_tmpl_intro",
+      "name": "도입부 (1부)",
+      "partType": "intro",
+      "genre": "판타지",
+      "description": "주인공 소개, 세계관 설정, 사건의 씨앗을 뿌리는 도입부",
+      "sections": {
+        "prologue": {
+          "title": "프롤로그 - {{prologue_title}}",
+          "variations": [
+            "{{world_name}}에 평화가 깃들었던 시절이 있었다. 하늘은 맑고 대지는 풍요로웠으며, 사람들은 내일을 걱정하지 않고 살아갔다. {{protagonist}}은(는) {{protagonist_origin}}에서 {{protagonist_initial_state}}. {{world_description}} 누구도 이 평화가 영원하리라 의심하지 않았다. 아이들은 거리에서 뛰놀고, 상인들은 번창하는 장사에 웃음꽃을 피웠다. 하지만 그 평화는 오래가지 못했다. {{disaster_hint}}의 그림자가 서서히 드리워지고 있었으니. 현명한 자들은 이미 불길한 조짐을 감지했지만, 대부분의 사람들은 그 경고를 무시했다. 운명의 수레바퀴가 돌아가기 시작했다.",
+            "{{time_setting}}, {{world_name}}의 역사에 새로운 장이 열리려 하고 있었다. 오래된 예언서에는 이미 이 시대의 도래가 기록되어 있었지만, 그것을 기억하는 자는 거의 없었다. {{protagonist}}은(는) 아직 자신의 운명을 알지 못한 채 {{protagonist_initial_state}}. {{world_description}} 밤하늘의 별들은 변함없이 빛나고 있었지만, 예민한 마법사들은 별의 배치가 조금씩 변하고 있음을 눈치챘다. 고대의 봉인이 약해지고 있었다. 그리고 그 사실을 가장 먼저 알아챈 것은 다름 아닌 어둠의 세력이었다. 그러나 운명의 수레바퀴는 이미 돌아가기 시작했고, 더 이상 누구도 그것을 멈출 수 없었다."
+          ]
+        },
+        "chapter1": {
+          "title": "1장 - {{chapter1_title}}",
+          "variations": [
+            "{{protagonist}}은(는) {{protagonist_description}} {{protagonist_personality_detail}} 매일같이 {{daily_routine}}을(를) 반복하는 평범한 나날이었다. 아침이면 일어나 하루를 시작하고, 저녁이면 피곤한 몸을 이끌고 잠자리에 드는 단조로운 생활. 하지만 {{protagonist}}의 마음 한켠에는 늘 무언가가 자리하고 있었다. {{protagonist_inner_conflict}} 가끔 꾸는 악몽들, 이유 없이 치밀어 오르는 분노, 그리고 자신도 설명할 수 없는 막연한 그리움. 그것이 무엇인지, 아직 {{protagonist}}도 알지 못했다. 마을 사람들은 {{protagonist}}을(를) 조용하지만 성실한 젊은이라고 평가했다. 아무도 {{protagonist}}의 내면에서 타오르는 불꽃을 눈치채지 못했다. 그리고 {{protagonist}} 자신도 그 불꽃의 정체를 깨닫지 못한 채 하루하루를 보내고 있었다.",
+            "{{protagonist_alias}}라 불리는 {{protagonist}}. {{protagonist_description}} 사람들은 {{protagonist}}을(를) {{public_perception}}(이)라 여겼지만, 진실은 달랐다. {{protagonist_secret}} 때때로 {{protagonist}}은(는) 자신이 이곳에 속하지 않은 존재라는 느낌을 받곤 했다. 마치 퍼즐의 조각이 잘못된 그림에 억지로 끼워 맞춰진 것처럼. 밤이면 이상한 꿈을 꾸었다. 불타는 성, 비명을 지르는 사람들, 그리고 누군가의 애타는 외침. 꿈에서 깨어날 때마다 베개는 눈물로 젖어 있었지만, 정작 무슨 꿈을 꾸었는지는 기억나지 않았다. 언젠가 그 비밀이 드러날 날을 {{protagonist}}은(는) 두려워하면서도 기다리고 있었다. 진실은 때로 고통스럽지만, 거짓 속에 사는 것보다는 나으니까."
+          ]
+        },
+        "chapter2": {
+          "title": "2장 - {{chapter2_title}}",
+          "variations": [
+            "{{inciting_event_title}}. 그 사건은 아무런 예고 없이 찾아왔다. {{inciting_event_description}} 그날, {{protagonist}}의 일상은 산산이 부서졌다. 평범했던 하루가 영원히 끝나버린 순간이었다. {{ally_1}}이(가) 나타난 것이다. {{ally_1_description}} 처음 보는 이방인이었지만, 어딘가 익숙한 느낌이 들었다. {{protagonist}}의 심장이 이상하게 뛰기 시작했다. {{ally_1}}은(는) {{protagonist}}에게 믿기 어려운 이야기를 전했다. {{revelation}} 세상이 빙글빙글 도는 것 같았다. 이것이 꿈인지 현실인지 분간이 되지 않았다. 하지만 {{ally_1}}의 눈빛은 너무나 진지했고, 그 눈빛 속에서 {{protagonist}}은(는) 부정할 수 없는 진실을 읽어냈다. 모든 것이 변하기 시작한 순간이었다.",
+            "운명은 {{inciting_event_title}}의 형태로 찾아왔다. {{inciting_event_description}} {{protagonist}}은(는) 믿을 수 없었다. 머릿속이 하얘지고, 다리에 힘이 풀렸다. 이건 말도 안 돼. 하지만 현실은 너무나 명확했다. {{revelation}} 지금까지 믿어왔던 모든 것이 무너지는 소리가 들리는 것 같았다. 하지만 {{ally_1}}의 눈은 진지했다. {{ally_1_description}} {{ally_1}}은(는) {{protagonist}}에게 선택의 시간이 왔다고 말했다. 진실을 외면하고 이대로 살아갈 것인가, 아니면 모든 것을 걸고 운명에 맞설 것인가. {{protagonist}}은(는) 떨리는 손으로 주먹을 불끈 쥐었다. 더 이상 외면할 수 없는 진실이 {{protagonist}} 앞에 놓였다."
+          ]
+        },
+        "chapter3": {
+          "title": "3장 - {{chapter3_title}}",
+          "variations": [
+            "{{protagonist}}은(는) 결심했다. 더 이상 숨어 살 수 없다. 운명이 자신을 찾아온 이상, 그것을 피하는 것은 불가능했다. {{first_action}} 두려웠다. 하지만 두려움보다 강한 것은 진실을 향한 갈망이었다. {{ally_1}}과(와) 함께 {{protagonist}}은(는) {{first_destination}}(으)로 향했다. 여정의 시작이었다. {{journey_description}} 뒤를 돌아보면 익숙한 풍경이 점점 멀어지고 있었다. 앞에는 미지의 세계가 펼쳐져 있었다. 앞으로 펼쳐질 시련은 아직 알 수 없었지만, {{protagonist}}의 눈에는 처음으로 불꽃이 일었다. 이제 진정한 이야기가 시작된다. {{protagonist}}은(는) 뒤를 돌아보지 않고 앞으로 나아갔다. 운명이 기다리고 있었다.",
+            "{{antagonist}}. 그 이름을 처음 들었을 때 {{protagonist}}의 심장은 격렬하게 뛰었다. 모든 비극의 원흉. 모든 고통의 근원. {{antagonist_first_mention}} {{protagonist}}은(는) 주먹을 불끈 쥐었다. 손톱이 손바닥을 파고들었지만 통증은 느껴지지 않았다. 오직 타오르는 결의만이 있을 뿐이었다. {{protagonist_determination}} {{ally_1}}이(가) {{protagonist}}의 어깨에 손을 얹었다. \"혼자가 아니야.\" 그 한마디가 {{protagonist}}에게 힘을 주었다. 이제 모든 것이 시작된다. 복수의 여정이, 진실을 향한 여정이, 그리고 잃어버린 모든 것을 되찾기 위한 여정이."
+          ]
+        }
+      },
+      "defaultTitles": {
+        "prologue_title": "운명의 시작",
+        "chapter1_title": "평범한 일상",
+        "chapter2_title": "운명의 만남",
+        "chapter3_title": "각성"
+      }
+    },
+    {
+      "id": "ext_tmpl_development",
+      "name": "전개부 (2부)",
+      "partType": "development",
+      "genre": "판타지",
+      "description": "동료 결집, 갈등 심화, 복선 설치가 이루어지는 전개부",
+      "sections": {
+        "prologue": {
+          "title": "프롤로그 - {{prologue_title}}",
+          "variations": [
+            "{{time_skip}} {{protagonist}}과(와) {{ally_1}}은(는) {{current_location}}에 도착했다. {{location_description}} 이곳에서 {{protagonist}}은(는) 자신의 힘을 키워야 했다. {{training_hint}} 하지만 적들도 가만히 있지 않았다. {{antagonist_activity}}",
+            "{{previous_part_summary}} 이제 {{protagonist}}에게 필요한 것은 힘이었다. {{current_location}}. {{location_description}} {{protagonist}}은(는) 이곳에서 진정한 수련을 시작하기로 결심했다."
+          ]
+        },
+        "chapter1": {
+          "title": "{{chapter_number}}장 - {{chapter1_title}}",
+          "variations": [
+            "{{mentor}}을(를) 만난 것은 {{meeting_circumstance}}에서였다. {{mentor_description}} {{mentor}}은(는) {{protagonist}}을(를) 한 번 보더니 고개를 끄덕였다. \"{{mentor_quote}}\" {{training_description}} {{protagonist}}은(는) 매일 쓰러지고, 일어나기를 반복했다.",
+            "{{current_location}}에서의 생활이 시작되었다. {{training_description}} {{mentor}}의 가르침은 가혹했다. {{mentor_description}} 하지만 {{protagonist}}은(는) 이를 악물었다. {{protagonist_determination}} 조금씩, 확실하게 {{protagonist}}은(는) 강해지고 있었다."
+          ]
+        },
+        "chapter2": {
+          "title": "{{chapter_number_2}}장 - {{chapter2_title}}",
+          "variations": [
+            "{{ally_2}}과(와)의 만남은 {{ally_2_meeting}}이었다. {{ally_2_description}} 처음에는 {{initial_friction}} 하지만 {{bonding_event}}을(를) 계기로 둘은 서로를 이해하게 되었다. {{ally_2}}은(는) {{ally_2_skill}}의 소유자였다. \"{{ally_2_quote}}\" {{protagonist}}의 동료가 한 명 더 늘었다.",
+            "새로운 인연이 찾아왔다. {{ally_2}}. {{ally_2_description}} {{ally_2}}은(는) {{protagonist}}을(를) 처음 봤을 때 {{ally_2_first_impression}}. 하지만 {{bonding_event}} 이후, 둘은 서로의 등을 맡길 수 있는 사이가 되었다."
+          ]
+        },
+        "chapter3": {
+          "title": "{{chapter_number_3}}장 - {{chapter3_title}}",
+          "variations": [
+            "{{mid_conflict_event}}. {{protagonist}} 일행은 처음으로 진정한 위기에 직면했다. {{conflict_description}} {{antagonist_minion}}이(가) 나타난 것이다. {{battle_description}} 치열한 전투 끝에 {{battle_result}} {{protagonist}}은(는) 깨달았다. 아직 멀었다. 더 강해져야 한다.",
+            "평화는 오래가지 않았다. {{mid_conflict_event}}가 {{protagonist}} 일행을 덮쳤다. {{conflict_description}} {{ally_2}}이(가) 위기에 처했을 때, {{protagonist}}은(는) {{protagonist_awakening}}. 새로운 힘이 눈을 떴다. 하지만 이것은 시작에 불과했다."
+          ]
+        }
+      },
+      "defaultTitles": {
+        "prologue_title": "새로운 시작",
+        "chapter1_title": "수련의 날들",
+        "chapter2_title": "새로운 동료",
+        "chapter3_title": "첫 번째 시련"
+      }
+    },
+    {
+      "id": "ext_tmpl_crisis",
+      "name": "위기부 (3부)",
+      "partType": "crisis",
+      "genre": "판타지",
+      "description": "배신/반전, 클라이맥스, 최대 위기가 펼쳐지는 부분",
+      "sections": {
+        "prologue": {
+          "title": "프롤로그 - {{prologue_title}}",
+          "variations": [
+            "{{crisis_setup}} {{protagonist}} 일행은 마침내 {{crisis_location}}에 도달했다. {{crisis_location_description}} 하지만 그곳에서 기다리고 있던 것은... {{crisis_reveal}}",
+            "모든 것이 이 순간을 위해 준비되어 왔다. {{protagonist}}은(는) 결전을 앞두고 {{protagonist_state}}. {{allies_state}} 운명의 시간이 다가오고 있었다. {{ominous_hint}}"
+          ]
+        },
+        "chapter1": {
+          "title": "{{chapter_number}}장 - {{chapter1_title}}",
+          "variations": [
+            "{{antagonist}}와(과) 마침내 대면한 {{protagonist}}. {{antagonist_description}} {{antagonist}}은(는) {{antagonist_greeting}}. \"{{antagonist_quote}}\" {{protagonist}}의 심장이 격렬하게 뛰었다. {{confrontation_description}}",
+            "\"오랫만이군, {{protagonist}}.\" {{antagonist}}의 목소리가 {{crisis_location}}에 울려 퍼졌다. {{antagonist_description}} {{protagonist}}은(는) 이를 악물었다. 드디어, 이 순간이 왔다. {{confrontation_description}}"
+          ]
+        },
+        "chapter2": {
+          "title": "{{chapter_number_2}}장 - {{chapter2_title}}",
+          "variations": [
+            "{{betrayal_or_twist}}. {{protagonist}}은(는) 믿을 수 없었다. {{twist_description}} \"왜...?\" {{protagonist}}의 물음에 {{twist_character}}은(는) {{twist_explanation}}. 모든 것이 무너지는 듯했다. {{protagonist_reaction}}",
+            "진실이 밝혀지는 순간이었다. {{betrayal_or_twist}}. {{twist_description}} {{protagonist}}의 세계가 흔들렸다. 지금까지 믿어왔던 모든 것이... {{protagonist_realization}} 하지만 시간은 {{protagonist}}을(를) 기다려주지 않았다."
+          ]
+        },
+        "chapter3": {
+          "title": "{{chapter_number_3}}장 - {{chapter3_title}}",
+          "variations": [
+            "{{climax_event}}. {{climax_description}} {{protagonist}}은(는) 모든 것을 걸었다. {{final_battle_description}} {{ally_support}} 빛과 어둠이 충돌하는 가운데, {{protagonist}}은(는) {{protagonist_climax_action}}. 이것이 끝인가, 아니면 시작인가.",
+            "결전의 순간이 왔다. {{climax_event}}. {{climax_description}} {{protagonist}}은(는) {{protagonist_final_state}}. \"{{protagonist_battle_cry}}\" {{final_battle_description}} 승부는 아직 결정되지 않았다. {{cliffhanger}}"
+          ]
+        }
+      },
+      "defaultTitles": {
+        "prologue_title": "폭풍 전야",
+        "chapter1_title": "대면",
+        "chapter2_title": "진실",
+        "chapter3_title": "결전"
+      }
+    },
+    {
+      "id": "ext_tmpl_resolution",
+      "name": "결말부 (4부)",
+      "partType": "resolution",
+      "genre": "판타지",
+      "description": "최종 결전, 떡밥 회수, 새로운 시작을 그리는 마무리",
+      "sections": {
+        "prologue": {
+          "title": "프롤로그 - {{prologue_title}}",
+          "variations": [
+            "{{aftermath_description}} {{protagonist}}은(는) {{protagonist_state_after_crisis}}. {{remaining_conflict}} 하지만 아직 끝이 아니었다. {{final_enemy}}이(가) 남아있었다.",
+            "모든 것이 끝난 줄 알았다. 하지만 {{twist_reveal}}. {{protagonist}}은(는) 지친 몸을 이끌고 다시 일어섰다. {{final_determination}} 진정한 끝을 향해."
+          ]
+        },
+        "chapter1": {
+          "title": "{{chapter_number}}장 - {{chapter1_title}}",
+          "variations": [
+            "{{resolution_begins}} {{protagonist}}과(와) {{allies_list}}은(는) {{final_preparation}}. {{final_location}}에서 {{final_enemy}}와(과)의 마지막 싸움이 기다리고 있었다. {{preparation_description}}",
+            "마지막 싸움을 앞두고 {{protagonist}}은(는) {{reflection_moment}}. {{allies_list}}이(가) 곁에 있었다. {{ally_support_moment}} 함께라면 할 수 있다. {{protagonist}}은(는) 그렇게 믿었다."
+          ]
+        },
+        "chapter2": {
+          "title": "{{chapter_number_2}}장 - {{chapter2_title}}",
+          "variations": [
+            "{{final_battle_event}}. {{final_battle_description}} {{protagonist}}은(는) {{protagonist_final_power}}을(를) 발휘했다. {{allies_contribution}} 마침내 {{final_enemy}}이(가) 쓰러졌다. {{victory_moment}}",
+            "모든 것을 건 일격. {{protagonist}}의 {{protagonist_skill}}이(가) {{final_enemy}}을(를) 관통했다. {{final_battle_description}} 승리의 순간, {{protagonist}}은(는) {{victory_emotion}}. 끝났다. 마침내."
+          ]
+        },
+        "chapter3": {
+          "title": "{{chapter_number_3}}장 - {{chapter3_title}}",
+          "variations": [
+            "{{time_after_victory}}. {{new_era_description}} {{protagonist}}은(는) {{protagonist_final_role}}이(가) 되었다. {{allies_endings}} 하지만 {{protagonist}}은(는) 알고 있었다. 이것은 끝이 아니라 새로운 시작이라는 것을. {{epilogue_hint}}",
+            "평화가 찾아왔다. {{new_era_description}} {{protagonist}}은(는) {{protagonist_reflection}}. {{allies_endings}} {{final_scene_description}} 새로운 이야기가, 이제 막 시작되려 하고 있었다."
+          ]
+        }
+      },
+      "defaultTitles": {
+        "prologue_title": "마지막 전쟁",
+        "chapter1_title": "최후의 준비",
+        "chapter2_title": "승리",
+        "chapter3_title": "새로운 시대"
+      }
+    }
+  ],
+  "genreVocabulary": {
+    "판타지": {
+      "power": ["마법", "마력", "고대의 힘", "축복", "신비한 기운"],
+      "awakening": ["각성", "눈을 뜨다", "깨어나다", "발현하다"],
+      "conflict": ["봉인", "저주", "어둠의 세력", "마왕", "고대의 악"]
+    },
+    "회귀물": {
+      "power": ["전생의 기억", "미래 지식", "경험치", "스킬"],
+      "awakening": ["회귀하다", "돌아오다", "다시 시작하다"],
+      "conflict": ["사망 플래그", "파멸 엔딩", "비극적 운명"]
+    },
+    "빙의물": {
+      "power": ["원작 지식", "스토리 정보", "캐릭터 이해"],
+      "awakening": ["빙의하다", "눈을 뜨다", "정신이 들다"],
+      "conflict": ["악역", "사망 엔딩", "원작 스토리"]
+    },
+    "무협": {
+      "power": ["내공", "진기", "검기", "무공", "비급"],
+      "awakening": ["오의를 깨닫다", "경지에 이르다", "대성하다"],
+      "conflict": ["마도", "사파", "혈투", "강호의 원한"]
+    },
+    "로맨스판타지": {
+      "power": ["가문의 힘", "마법 능력", "신성력"],
+      "awakening": ["진정한 마음", "사랑의 힘", "각성"],
+      "conflict": ["정략결혼", "신분 차이", "오해", "질투"]
+    }
+  },
+  "presetSynopses": [
+    {
+      "id": "preset_001",
+      "projectId": "proj_001",
+      "templateId": "tmpl_001",
+      "title": "잃어버린 왕국 - 복수와 재건의 서사",
+      "selectedCharacters": ["char_001", "char_002", "char_003", "char_004", "char_005"],
+      "selectedEvents": ["event_001", "event_002", "event_003", "event_005"],
+      "generatedSynopsis": "25년 전 암흑 제국의 침공으로 루미나스 왕국이 멸망하고, 어린 왕자 이로운만이 겨우 살아남았다. 평민으로 숨어 살던 그는 엘프 수호자 아리아와의 만남을 통해 자신의 정체를 깨닫고 왕국 재건의 여정을 시작한다.\n\n화염 마법사 리나, 솔라리스 기사단장 아렌 헬리오스와 함께 세력을 키워나가는 이로운. 하지만 그 앞에는 과거의 친구였던 배신자 카이안이 적으로 서 있다.\n\n검은 용의 각성이라는 대재앙 속에서 이로운은 왕가의 검술을 완성하고, 카이안과의 최종 결전에서 승리한다. 그 과정에서 카이안의 배신에 숨겨진 비밀이 밝혀지며, 진정한 적은 암흑 제국의 황제였음이 드러난다.\n\n이로운은 동료들과 함께 암흑 제국을 무너뜨리고, 마침내 루미나스 왕국을 재건하여 새로운 시대를 열어간다.",
+      "metadata": {
+        "wordCount": 320,
+        "genre": "판타지",
+        "tone": "서사적",
+        "generatedAt": "2024-11-24T00:00:00Z"
+      }
+    },
+    {
+      "id": "preset_002",
+      "projectId": "proj_001",
+      "templateId": "tmpl_002",
+      "title": "이로운의 성장 서사",
+      "selectedCharacters": ["char_001", "char_002"],
+      "selectedEvents": ["event_004", "event_002"],
+      "generatedSynopsis": "어린 시절의 비극적 기억만을 안고 살아온 이로운에게 엘프 아리아가 나타난다. 그녀는 엘베린 숲의 수호자로서 고대의 지혜와 마법을 전수하며 이로운의 스승이 된다.\n\n왕가의 검술과 빛의 마력을 익히는 과정은 순탄치 않았다. 수없이 쓰러지고, 좌절하고, 다시 일어서기를 반복한다. 검은 용의 각성이라는 시련 앞에서 이로운은 진정한 왕으로 거듭난다.\n\n더 이상 복수에 눈먼 왕자가 아닌, 백성을 품는 진정한 군주로서 이로운은 새로운 시대를 열어간다.",
+      "metadata": {
+        "wordCount": 220,
+        "genre": "판타지",
+        "tone": "성장",
+        "generatedAt": "2024-11-24T00:00:00Z"
+      }
+    },
+    {
+      "id": "preset_003",
+      "projectId": "proj_001",
+      "templateId": "tmpl_001",
+      "title": "카이안과의 대립 - 집중 시놉시스",
+      "selectedCharacters": ["char_001", "char_003"],
+      "selectedEvents": ["event_005"],
+      "generatedSynopsis": "이로운과 카이안. 한때는 형제처럼 가까웠던 두 사람은 루미나스 왕국 멸망의 밤, 영원히 갈라졌다. 카이안은 암흑 제국의 편에 섰고, 이로운은 모든 것을 잃었다.\n\n25년의 세월이 흘러 다시 마주한 두 사람. 이로운의 검에는 복수의 불꽃이, 카이안의 눈에는 말할 수 없는 고통이 서려 있다. 배신의 진실은 무엇인가? 과연 용서는 가능한가?\n\n운명은 두 사람을 다시 한번 극적인 대결로 이끈다. 그 끝에서 밝혀지는 진실은 모든 것을 바꿔놓는다.",
+      "metadata": {
+        "wordCount": 200,
+        "genre": "판타지",
+        "tone": "긴장감",
+        "generatedAt": "2024-11-24T00:00:00Z"
+      }
+    }
+  ]
+}

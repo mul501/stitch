@@ -1,0 +1,26 @@
+{
+  "items": [
+    {
+      "id": "item_001",
+      "projectId": "proj_001",
+      "name": "봉인의 검",
+      "type": "무기",
+      "rarity": "전설",
+      "description": "검은 용을 봉인하는 데 사용된 고대의 성검. 빛의 기사단의 초대 단장이 사용했으며, 용의 각성과 함께 새로운 주인을 찾아 나선다.",
+      "abilities": "용 봉인, 어둠 정화, 빛의 심판",
+      "currentOwner": null,
+      "createdAt": "2024-01-11T00:00:00Z"
+    },
+    {
+      "id": "item_002",
+      "projectId": "proj_001",
+      "name": "영혼의 활",
+      "type": "무기",
+      "rarity": "전설",
+      "description": "엘베린 숲의 수호자에게만 전해지는 신성한 활. 자연의 힘을 화살에 담아 쏠 수 있으며, 주인과 정신적으로 연결되어 있다.",
+      "abilities": "자연 마법 증폭, 정령 소환, 치유의 화살",
+      "currentOwner": "char_002",
+      "createdAt": "2024-01-13T00:00:00Z"
+    }
+  ]
+}

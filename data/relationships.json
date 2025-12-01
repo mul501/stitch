@@ -1,0 +1,126 @@
+{
+  "relationships": [
+    {
+      "id": "rel_001",
+      "projectId": "proj_001",
+      "sourceId": "char_001",
+      "targetId": "char_002",
+      "type": "동맹",
+      "subtype": "전우",
+      "strength": 5,
+      "bidirectional": true,
+      "description": "왕국 재건을 위해 함께하는 동료. 아리아는 이로운의 여정에 동행하며 그를 돕는다.",
+      "startEvent": "event_002",
+      "keywords": ["#신뢰", "#동료", "#여정"],
+      "createdAt": "2024-01-20T00:00:00Z"
+    },
+    {
+      "id": "rel_002",
+      "projectId": "proj_001",
+      "sourceId": "char_001",
+      "targetId": "char_003",
+      "type": "적대",
+      "subtype": "숙적",
+      "strength": 5,
+      "bidirectional": true,
+      "description": "과거의 친구였으나 왕국 멸망의 배후에 있던 인물. 복잡한 감정이 얽힌 숙적 관계.",
+      "startEvent": "event_005",
+      "keywords": ["#배신", "#복수", "#과거"],
+      "createdAt": "2024-01-20T00:00:00Z"
+    },
+    {
+      "id": "rel_003",
+      "projectId": "proj_001",
+      "sourceId": "char_001",
+      "targetId": "char_004",
+      "type": "동맹",
+      "subtype": "동료",
+      "strength": 4,
+      "bidirectional": true,
+      "description": "여정 중 우연히 만난 동료. 리나의 밝은 성격이 이로운의 어두운 과거를 위로한다.",
+      "startEvent": null,
+      "keywords": ["#동료", "#우정"],
+      "createdAt": "2024-01-20T00:00:00Z"
+    },
+    {
+      "id": "rel_004",
+      "projectId": "proj_001",
+      "sourceId": "char_001",
+      "targetId": "char_005",
+      "type": "동맹",
+      "subtype": "전우",
+      "strength": 4,
+      "bidirectional": true,
+      "description": "공동의 적에 맞서는 동맹. 아렌은 이로운의 진정한 신분을 알게 된 후 그의 대의에 동참한다.",
+      "startEvent": "event_002",
+      "keywords": ["#명예", "#동맹", "#정의"],
+      "createdAt": "2024-01-20T00:00:00Z"
+    },
+    {
+      "id": "rel_005",
+      "projectId": "proj_001",
+      "sourceId": "char_002",
+      "targetId": "char_004",
+      "type": "동맹",
+      "subtype": "동료",
+      "strength": 3,
+      "bidirectional": true,
+      "description": "함께 여행하는 동료. 성격은 다르지만 서로를 존중하는 관계.",
+      "startEvent": null,
+      "keywords": ["#동료", "#여행"],
+      "createdAt": "2024-01-20T00:00:00Z"
+    },
+    {
+      "id": "rel_006",
+      "projectId": "proj_001",
+      "sourceId": "char_003",
+      "targetId": "char_005",
+      "type": "적대",
+      "subtype": "라이벌",
+      "strength": 3,
+      "bidirectional": true,
+      "description": "서로 다른 진영에서 대립. 과거 검은 숲 조약 당시 처음 마주쳤다.",
+      "startEvent": "event_003",
+      "keywords": ["#대립", "#진영"],
+      "createdAt": "2024-01-20T00:00:00Z"
+    }
+  ],
+  "relationshipTypes": [
+    {
+      "type": "동맹",
+      "subtypes": ["전우", "동료", "사제", "은인"],
+      "color": "#22C55E",
+      "icon": "handshake"
+    },
+    {
+      "type": "적대",
+      "subtypes": ["숙적", "라이벌", "원수"],
+      "color": "#EF4444",
+      "icon": "swords"
+    },
+    {
+      "type": "가족",
+      "subtypes": ["부모", "자녀", "형제", "친척"],
+      "color": "#3B82F6",
+      "icon": "family_restroom"
+    },
+    {
+      "type": "연인",
+      "subtypes": ["연인", "약혼", "부부", "짝사랑"],
+      "color": "#EC4899",
+      "icon": "favorite"
+    },
+    {
+      "type": "주종",
+      "subtypes": ["주군", "가신", "충신"],
+      "color": "#8B5CF6",
+      "icon": "shield"
+    },
+    {
+      "type": "중립",
+      "subtypes": ["지인", "거래", "협력"],
+      "color": "#6B7280",
+      "icon": "person"
+    }
+  ]
+}
