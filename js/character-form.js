@@ -66,7 +66,20 @@ class CharacterForm {
     }
 
     const relationships = await characterStore.getRelatedRelationships(characterId);
-    this.renderDeleteModal(character, relationships);
+
+    // 각 관계에 상대 캐릭터 이름 추가
+    const relationshipsWithNames = await Promise.all(
+      relationships.map(async (rel) => {
+        const targetId = rel.sourceId === characterId ? rel.targetId : rel.sourceId;
+        const targetChar = await characterStore.getCharacterById(targetId);
+        return {
+          ...rel,
+          targetName: targetChar?.name || targetId
+        };
+      })
+    );
+
+    this.renderDeleteModal(character, relationshipsWithNames);
   }
 
   /**
@@ -266,7 +279,7 @@ class CharacterForm {
                 </p>
                 <ul class="text-sm text-amber-700 list-disc list-inside max-h-32 overflow-y-auto">
                   ${relationships.map(rel => `
-                    <li>${rel.type}: ${rel.sourceId === character.id ? rel.targetId : rel.sourceId}</li>
+                    <li>${rel.type}: ${rel.targetName}</li>
                   `).join('')}
                 </ul>
               </div>

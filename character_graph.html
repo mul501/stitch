@@ -175,7 +175,7 @@
             </div>
 
             <!-- 상세 정보 패널 -->
-            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 max-h-[calc(100vh-280px)] overflow-y-auto">
                 <div class="flex justify-between items-center mb-4">
                     <h3 class="text-lg font-semibold text-gray-900">선택 정보</h3>
                     <button id="add-relationship-btn"
@@ -193,6 +193,29 @@
             </div>
         </div>
     </main>
+
+    <!-- 관계 추가/수정 모달 -->
+    <div id="relationship-modal" class="fixed inset-0 z-50 hidden">
+        <!-- 배경 오버레이 -->
+        <div class="absolute inset-0 bg-black/50" onclick="closeRelationshipModal()"></div>
+        <!-- 모달 컨텐츠 -->
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg bg-white rounded-xl shadow-2xl max-h-[90vh] overflow-y-auto">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 id="modal-title" class="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-blue-600">add_circle</span>
+                        새 관계 추가
+                    </h3>
+                    <button onclick="closeRelationshipModal()" class="p-1 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
+                </div>
+                <div id="modal-form-container">
+                    <!-- 폼이 여기에 렌더링됨 -->
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Scripts -->
     <script src="./js/utils.js"></script>
@@ -268,19 +291,36 @@
         // 관계 CRUD 함수들
         // ========================================
 
+        // 모달 열기/닫기
+        function openRelationshipModal() {
+            document.getElementById('relationship-modal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeRelationshipModal() {
+            document.getElementById('relationship-modal').classList.add('hidden');
+            document.body.style.overflow = '';
+            currentEditMode = 'view';
+            currentRelationship = null;
+        }
+
         // 새 관계 추가 모드
         function startAddRelationship() {
             currentEditMode = 'create';
             currentRelationship = null;
 
-            document.getElementById('detail-panel').innerHTML = `
-                <h4 class="font-medium text-gray-900 mb-4 flex items-center gap-2">
-                    <span class="material-symbols-outlined text-blue-600">add_circle</span>
-                    새 관계 추가
-                </h4>
-                ${graphUtils.createRelationshipEditFormHtml(null, allCharacters, relationshipTypes, true)}
+            // 모달 제목 설정
+            document.getElementById('modal-title').innerHTML = `
+                <span class="material-symbols-outlined text-blue-600">add_circle</span>
+                새 관계 추가
             `;
+
+            // 폼 렌더링
+            document.getElementById('modal-form-container').innerHTML =
+                graphUtils.createRelationshipEditFormHtml(null, allCharacters, relationshipTypes, true);
+
             setupFormEventListeners();
+            openRelationshipModal();
         }
 
         // 관계 편집 모드
@@ -288,14 +328,18 @@
             currentEditMode = 'edit';
             currentRelationship = relationship;
 
-            document.getElementById('detail-panel').innerHTML = `
-                <h4 class="font-medium text-gray-900 mb-4 flex items-center gap-2">
-                    <span class="material-symbols-outlined text-blue-600">edit</span>
-                    관계 수정
-                </h4>
-                ${graphUtils.createRelationshipEditFormHtml(relationship, allCharacters, relationshipTypes, false)}
+            // 모달 제목 설정
+            document.getElementById('modal-title').innerHTML = `
+                <span class="material-symbols-outlined text-blue-600">edit</span>
+                관계 수정
             `;
+
+            // 폼 렌더링
+            document.getElementById('modal-form-container').innerHTML =
+                graphUtils.createRelationshipEditFormHtml(relationship, allCharacters, relationshipTypes, false);
+
             setupFormEventListeners();
+            openRelationshipModal();
         }
 
         // 폼 이벤트 리스너 설정
@@ -324,7 +368,7 @@
             });
 
             // 취소 버튼
-            document.getElementById('cancel-edit-btn')?.addEventListener('click', resetDetailPanel);
+            document.getElementById('cancel-edit-btn')?.addEventListener('click', closeRelationshipModal);
 
             // 삭제 버튼
             document.getElementById('delete-rel-btn')?.addEventListener('click', () => {
@@ -391,6 +435,7 @@
                 }
 
                 await refreshGraph();
+                closeRelationshipModal();
                 resetDetailPanel();
             } catch (error) {
                 console.error('Save error:', error);
@@ -406,6 +451,7 @@
                 relationshipStore.delete(currentRelationship.id);
                 utils.showToast('관계가 삭제되었습니다', 'success');
                 await refreshGraph();
+                closeRelationshipModal();
                 resetDetailPanel();
             } catch (error) {
                 console.error('Delete error:', error);
